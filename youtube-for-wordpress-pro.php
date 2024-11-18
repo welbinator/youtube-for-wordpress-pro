@@ -31,6 +31,9 @@ if (!function_exists('is_plugin_active')) {
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
 }
 
+require_once plugin_dir_path(__FILE__) . 'includes/simple-youtube-feed/pro-save.php';
+
+
 /**
  * Check if the free version is active.
  *

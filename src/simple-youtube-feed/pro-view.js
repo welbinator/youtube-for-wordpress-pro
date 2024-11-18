@@ -1,13 +1,22 @@
 import { addAction } from '@wordpress/hooks';
 
-addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, { channelId, layout, maxVideos }) => {
-    const renderVideos = YT_FOR_WP.renderVideos; // Use the global renderVideos function
-    const fetchVideos = YT_FOR_WP.fetchVideos; // Use the global fetchVideos function
+addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attributes) => {
+    const {
+        channelId,
+        layout,
+        maxVideos,
+        enableSearch = container.dataset.enableSearch === 'true',
+        enablePlaylistFilter = container.dataset.enablePlaylistFilter === 'true',
+    } = attributes;
+
+    console.log('Pro Attributes:', { enableSearch, enablePlaylistFilter });
+
+    const renderVideos = YT_FOR_WP.renderVideos;
+    const fetchVideos = YT_FOR_WP.fetchVideos;
 
     const apiUrlBase = `https://www.googleapis.com/youtube/v3`;
     const apiKey = YT_FOR_WP.apiKey;
 
-    // Use Pro-specific channelId if provided, otherwise fall back to global settings
     const effectiveChannelId = channelId || YT_FOR_WP.channelId;
 
     let playlists = [];
@@ -47,7 +56,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, { cha
         filterContainer.classList.add('youtube-filter-container');
 
         // Playlist dropdown
-        if (playlists.length > 0) {
+        if (enablePlaylistFilter && playlists.length > 0) {
             const dropdown = document.createElement('select');
             dropdown.classList.add('youtube-playlist-dropdown');
 
@@ -69,38 +78,42 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, { cha
         }
 
         // Search bar
-        const searchContainer = document.createElement('div');
-        searchContainer.classList.add('youtube-search-container');
+        if (enableSearch) {
+            const searchContainer = document.createElement('div');
+            searchContainer.classList.add('youtube-search-container');
 
-        const searchBar = document.createElement('input');
-        searchBar.type = 'text';
-        searchBar.placeholder = 'Search videos';
-        searchBar.classList.add('youtube-search-bar');
+            const searchBar = document.createElement('input');
+            searchBar.type = 'text';
+            searchBar.placeholder = 'Search videos';
+            searchBar.classList.add('youtube-search-bar');
 
-        const searchButton = document.createElement('button');
-        searchButton.textContent = 'Search';
-        searchButton.classList.add('youtube-search-button');
+            const searchButton = document.createElement('button');
+            searchButton.textContent = 'Search';
+            searchButton.classList.add('youtube-search-button');
 
-        searchBar.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                searchButton.click();
-            }
-        });
+            searchBar.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    searchButton.click();
+                }
+            });
 
-        searchButton.addEventListener('click', async () => {
-            const keyword = searchBar.value.trim();
-            const playlistId = document.querySelector('.youtube-playlist-dropdown')?.value || '';
-            const videos = await fetchVideos(keyword, playlistId);
-            renderVideos(container, videos, layout);
-        });
+            searchButton.addEventListener('click', async () => {
+                const keyword = searchBar.value.trim();
+                const playlistId = document.querySelector('.youtube-playlist-dropdown')?.value || '';
+                const videos = await fetchVideos(keyword, playlistId);
+                renderVideos(container, videos, layout);
+            });
 
-        searchContainer.appendChild(searchBar);
-        searchContainer.appendChild(searchButton);
-        filterContainer.appendChild(searchContainer);
+            searchContainer.appendChild(searchBar);
+            searchContainer.appendChild(searchButton);
+            filterContainer.appendChild(searchContainer);
+        }
 
         // Append the filter container to the top of the main container
-        container.prepend(filterContainer);
+        if (filterContainer.children.length > 0) {
+            container.prepend(filterContainer);
+        }
     }
 
     // Render the "Load More" button
