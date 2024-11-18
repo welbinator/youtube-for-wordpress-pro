@@ -1,7 +1,7 @@
 import { addFilter } from '@wordpress/hooks';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import { PanelBody, ToggleControl, TextControl } from '@wordpress/components';
 
 // Extend block attributes
 const addProAttributes = (settings, name) => {
@@ -10,6 +10,7 @@ const addProAttributes = (settings, name) => {
             ...settings.attributes,
             enableSearch: { type: 'boolean', default: false },
             enablePlaylistFilter: { type: 'boolean', default: false },
+            channelId: { type: 'string', default: '' }, // Add Channel ID as a Pro attribute
         };
     }
     return settings;
@@ -26,6 +27,12 @@ const withProControls = createHigherOrderComponent((BlockEdit) => {
                     <BlockEdit {...props} />
                     <InspectorControls>
                         <PanelBody title="Pro Features">
+                            <TextControl
+                                label="YouTube Channel ID (Pro)"
+                                value={attributes.channelId}
+                                onChange={(newChannelId) => setAttributes({ channelId: newChannelId })}
+                                help="Leave blank to use the default Channel ID from settings."
+                            />
                             <ToggleControl
                                 label="Enable User Search (Pro)"
                                 checked={attributes.enableSearch}
