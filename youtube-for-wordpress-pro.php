@@ -32,6 +32,7 @@ if (!function_exists('is_plugin_active')) {
 }
 
 require_once plugin_dir_path(__FILE__) . 'includes/simple-youtube-feed/pro-save.php';
+require_once plugin_dir_path(__FILE__) . 'includes/youtube-live/pro-save.php';
 
 
 /**
