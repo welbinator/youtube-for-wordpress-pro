@@ -1,15 +1,30 @@
 import { addAction } from '@wordpress/hooks';
 
-addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, { channelId, layout, maxVideos }) => {
+addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attributes) => {
+    const {
+        channelId,
+        layout,
+        maxVideos,
+        enableSearch = container.dataset.enableSearch === 'true',
+        enablePlaylistFilter = container.dataset.enablePlaylistFilter === 'true',
+    } = attributes;
+
+    console.log('Pro Attributes:', { enableSearch, enablePlaylistFilter });
+
+    const renderVideos = YT_FOR_WP.renderVideos;
+    const fetchVideos = YT_FOR_WP.fetchVideos;
+
     const apiUrlBase = `https://www.googleapis.com/youtube/v3`;
     const apiKey = YT_FOR_WP.apiKey;
+
+    const effectiveChannelId = channelId || YT_FOR_WP.channelId;
 
     let playlists = [];
     let nextPageToken = null;
 
     // Function to fetch playlists
     async function fetchPlaylists(loadMore = false) {
-        let apiUrl = `${apiUrlBase}/playlists?part=snippet&channelId=${channelId}&key=${apiKey}&maxResults=50`;
+        let apiUrl = `${apiUrlBase}/playlists?part=snippet&channelId=${effectiveChannelId}&key=${apiKey}&maxResults=50`;
         if (nextPageToken && loadMore) {
             apiUrl += `&pageToken=${nextPageToken}`;
         }
@@ -35,39 +50,13 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, { cha
         }
     }
 
-    // Function to fetch videos
-    async function fetchVideos(searchQuery = '', playlistId = '') {
-        let apiUrl = `${apiUrlBase}/search?part=snippet&type=video&channelId=${channelId}&maxResults=${maxVideos}&key=${apiKey}`;
-        if (playlistId) {
-            apiUrl = `${apiUrlBase}/playlistItems?part=snippet&maxResults=${maxVideos}&playlistId=${playlistId}&key=${apiKey}`;
-        }
-        if (searchQuery) {
-            apiUrl += `&q=${encodeURIComponent(searchQuery)}`;
-        }
-
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-
-            if (data.error) {
-                console.error('YouTube API Error:', data.error);
-                return [];
-            }
-
-            return data.items || [];
-        } catch (error) {
-            console.error('Error fetching videos:', error);
-            return [];
-        }
-    }
-
-    // Render search and filter UI
+    // Render search and filter UI at the top
     function renderSearchAndFilterUI() {
         const filterContainer = document.createElement('div');
         filterContainer.classList.add('youtube-filter-container');
 
         // Playlist dropdown
-        if (playlists.length > 0) {
+        if (enablePlaylistFilter && playlists.length > 0) {
             const dropdown = document.createElement('select');
             dropdown.classList.add('youtube-playlist-dropdown');
 
@@ -89,37 +78,42 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, { cha
         }
 
         // Search bar
-        const searchContainer = document.createElement('div');
-        searchContainer.classList.add('youtube-search-container');
+        if (enableSearch) {
+            const searchContainer = document.createElement('div');
+            searchContainer.classList.add('youtube-search-container');
 
-        const searchBar = document.createElement('input');
-        searchBar.type = 'text';
-        searchBar.placeholder = 'Search videos';
-        searchBar.classList.add('youtube-search-bar');
+            const searchBar = document.createElement('input');
+            searchBar.type = 'text';
+            searchBar.placeholder = 'Search videos';
+            searchBar.classList.add('youtube-search-bar');
 
-        const searchButton = document.createElement('button');
-        searchButton.textContent = 'Search';
-        searchButton.classList.add('youtube-search-button');
+            const searchButton = document.createElement('button');
+            searchButton.textContent = 'Search';
+            searchButton.classList.add('youtube-search-button');
 
-        searchBar.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                searchButton.click();
-            }
-        });
+            searchBar.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    searchButton.click();
+                }
+            });
 
-        searchButton.addEventListener('click', async () => {
-            const keyword = searchBar.value.trim();
-            const playlistId = document.querySelector('.youtube-playlist-dropdown')?.value || '';
-            const videos = await fetchVideos(keyword, playlistId);
-            renderVideos(container, videos, layout);
-        });
+            searchButton.addEventListener('click', async () => {
+                const keyword = searchBar.value.trim();
+                const playlistId = document.querySelector('.youtube-playlist-dropdown')?.value || '';
+                const videos = await fetchVideos(keyword, playlistId);
+                renderVideos(container, videos, layout);
+            });
 
-        searchContainer.appendChild(searchBar);
-        searchContainer.appendChild(searchButton);
-        filterContainer.appendChild(searchContainer);
+            searchContainer.appendChild(searchBar);
+            searchContainer.appendChild(searchButton);
+            filterContainer.appendChild(searchContainer);
+        }
 
-        container.appendChild(filterContainer);
+        // Append the filter container to the top of the main container
+        if (filterContainer.children.length > 0) {
+            container.prepend(filterContainer);
+        }
     }
 
     // Render the "Load More" button
@@ -142,5 +136,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, { cha
 
     // Initial fetch for playlists and render the UI
     await fetchPlaylists();
-    renderSearchAndFilterUI();
+    renderSearchAndFilterUI(); // Render UI first
+    const videos = await fetchVideos(); // Fetch initial videos
+    renderVideos(container, videos, layout); // Render videos after UI
 });
