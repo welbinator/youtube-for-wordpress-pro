@@ -61,7 +61,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
     function renderSearchAndFilterUI() {
         
         if (container.querySelector('.youtube-search-container')) {
-            console.log('Search and Filter UI already exists, skipping...');
+            
             return;
         }
 
