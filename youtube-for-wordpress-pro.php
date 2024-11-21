@@ -34,15 +34,15 @@ if (!function_exists('is_plugin_active')) {
 require_once plugin_dir_path(__FILE__) . 'includes/simple-youtube-feed/pro-save.php';
 require_once plugin_dir_path(__FILE__) . 'includes/youtube-live/pro-save.php';
 
-
 /**
  * Check if the free version is active.
  *
  * @return bool
  */
 function is_free_version_active() {
-    return is_plugin_active('youtube-for-wordpress/youtube-for-wordpress.php');
+    return defined('YOUTUBE_FOR_WP_ACTIVE') && YOUTUBE_FOR_WP_ACTIVE;
 }
+
 
 /**
  * Check dependencies on activation.
