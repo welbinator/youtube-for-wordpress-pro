@@ -11,8 +11,15 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
     console.log('Pro Attributes:', { enableSearch, enablePlaylistFilter });
 
-    const renderVideos = YT_FOR_WP.renderVideos;
-    const fetchVideos = YT_FOR_WP.fetchVideos;
+    // Ensure the required functions are available
+    const renderVideos = YT_FOR_WP.renderVideos || function () {
+        console.error('renderVideos function is not available.');
+    };
+
+    const fetchVideos = YT_FOR_WP.fetchVideos || async function () {
+        console.error('fetchVideos function is not available.');
+        return [];
+    };
 
     const apiUrlBase = `https://www.googleapis.com/youtube/v3`;
     const apiKey = YT_FOR_WP.apiKey;
@@ -24,6 +31,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
     // Function to fetch playlists
     async function fetchPlaylists(loadMore = false) {
+        console.log('Fetching playlists...');
         let apiUrl = `${apiUrlBase}/playlists?part=snippet&channelId=${effectiveChannelId}&key=${apiKey}&maxResults=50`;
         if (nextPageToken && loadMore) {
             apiUrl += `&pageToken=${nextPageToken}`;
@@ -42,6 +50,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
                 ? [...playlists, ...data.items]
                 : [{ id: '', snippet: { title: 'All Videos' } }, ...data.items];
 
+            console.log('Fetched playlists:', playlists);
             nextPageToken = data.nextPageToken || null;
         } catch (error) {
             console.error('Error fetching playlists:', error);
@@ -50,8 +59,9 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
     // Render search and filter UI
     function renderSearchAndFilterUI() {
-        // Check if the container already has a search/filter UI
+        console.log('Rendering Search and Filter UI...');
         if (container.querySelector('.youtube-search-container')) {
+            console.log('Search and Filter UI already exists, skipping...');
             return;
         }
 
@@ -60,6 +70,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
         // Playlist dropdown
         if (enablePlaylistFilter && playlists.length > 0) {
+            console.log('Rendering playlist filter dropdown...');
             const dropdown = document.createElement('select');
             dropdown.classList.add('youtube-playlist-dropdown');
 
@@ -71,10 +82,14 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
             });
 
             dropdown.addEventListener('change', async () => {
-                const playlistId = dropdown.value;
-                const searchQuery = container.querySelector('.youtube-search-bar')?.value.trim() || '';
-                const videos = await fetchVideos(container, searchQuery, playlistId);
-                renderVideos(container, videos, layout);
+                try {
+                    const playlistId = dropdown.value;
+                    const searchQuery = container.querySelector('.youtube-search-bar')?.value.trim() || '';
+                    const videos = await fetchVideos(container, searchQuery, playlistId);
+                    renderVideos(container, videos, layout);
+                } catch (error) {
+                    console.error('Error handling playlist dropdown change:', error);
+                }
             });
 
             searchContainer.appendChild(dropdown);
@@ -82,6 +97,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
         // Search bar
         if (enableSearch) {
+            console.log('Rendering search bar...');
             const searchBar = document.createElement('input');
             searchBar.type = 'text';
             searchBar.placeholder = 'Search videos';
@@ -99,25 +115,34 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
             });
 
             searchButton.addEventListener('click', async () => {
-                const keyword = searchBar.value.trim();
-                const playlistId = container.querySelector('.youtube-playlist-dropdown')?.value || '';
-                const videos = await fetchVideos(container, keyword, playlistId);
-                renderVideos(container, videos, layout);
+                try {
+                    const keyword = searchBar.value.trim();
+                    const playlistId = container.querySelector('.youtube-playlist-dropdown')?.value || '';
+                    const videos = await fetchVideos(container, keyword, playlistId);
+                    renderVideos(container, videos, layout);
+                } catch (error) {
+                    console.error('Error handling search button click:', error);
+                }
             });
 
             searchContainer.appendChild(searchBar);
             searchContainer.appendChild(searchButton);
         }
 
-        // Append the search container to the top of the main container
         if (searchContainer.children.length > 0) {
+            console.log('Appending search and filter UI...');
             container.prepend(searchContainer);
         }
     }
 
     // Initial fetch for playlists and render the UI
-    await fetchPlaylists();
-    renderSearchAndFilterUI();
-    const videos = await fetchVideos(container); // Pass container explicitly
-    renderVideos(container, videos, layout);
+    try {
+        await fetchPlaylists();
+        renderSearchAndFilterUI();
+
+        const videos = await fetchVideos(container);
+        renderVideos(container, videos, layout);
+    } catch (error) {
+        console.error('Error during initialization:', error);
+    }
 });
