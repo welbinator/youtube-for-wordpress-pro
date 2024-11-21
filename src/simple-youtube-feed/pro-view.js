@@ -31,7 +31,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
     // Function to fetch playlists
     async function fetchPlaylists(loadMore = false) {
-        console.log('Fetching playlists...');
+        
         let apiUrl = `${apiUrlBase}/playlists?part=snippet&channelId=${effectiveChannelId}&key=${apiKey}&maxResults=50`;
         if (nextPageToken && loadMore) {
             apiUrl += `&pageToken=${nextPageToken}`;
@@ -50,7 +50,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
                 ? [...playlists, ...data.items]
                 : [{ id: '', snippet: { title: 'All Videos' } }, ...data.items];
 
-            console.log('Fetched playlists:', playlists);
+            
             nextPageToken = data.nextPageToken || null;
         } catch (error) {
             console.error('Error fetching playlists:', error);
@@ -59,7 +59,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
     // Render search and filter UI
     function renderSearchAndFilterUI() {
-        console.log('Rendering Search and Filter UI...');
+        
         if (container.querySelector('.youtube-search-container')) {
             console.log('Search and Filter UI already exists, skipping...');
             return;
@@ -70,7 +70,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
         // Playlist dropdown
         if (enablePlaylistFilter && playlists.length > 0) {
-            console.log('Rendering playlist filter dropdown...');
+            
             const dropdown = document.createElement('select');
             dropdown.classList.add('youtube-playlist-dropdown');
 
@@ -97,7 +97,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
         // Search bar
         if (enableSearch) {
-            console.log('Rendering search bar...');
+            
             const searchBar = document.createElement('input');
             searchBar.type = 'text';
             searchBar.placeholder = 'Search videos';
@@ -130,7 +130,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
         }
 
         if (searchContainer.children.length > 0) {
-            console.log('Appending search and filter UI...');
+           
             container.prepend(searchContainer);
         }
     }
