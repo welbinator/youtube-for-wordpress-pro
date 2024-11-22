@@ -9,8 +9,6 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
         enablePlaylistFilter = container.dataset.enablePlaylistFilter === 'true',
     } = attributes;
 
-    console.log('Pro Attributes:', { enableSearch, enablePlaylistFilter });
-
     // Ensure the required functions are available
     const renderVideos = YT_FOR_WP.renderVideos || function () {
         console.error('renderVideos function is not available.');
