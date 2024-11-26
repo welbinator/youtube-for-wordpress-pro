@@ -22,6 +22,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants.
+define( 'YOUTUBEFORWORDPRESS_PRO', __FILE__ );
 define('YOUTUBE_FOR_WP_PRO_VERSION', '1.0.1');
 define('YT_FOR_WP_PRO_PATH', plugin_dir_path(__FILE__));
 define('YT_FOR_WP_PRO_URL', plugin_dir_url(__FILE__));
@@ -29,6 +30,10 @@ define('YT_FOR_WP_PRO_URL', plugin_dir_url(__FILE__));
 // Include plugin.php for is_plugin_active().
 if (!function_exists('is_plugin_active')) {
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
+}
+
+if ( file_exists( plugin_dir_path( __FILE__ ) . 'EDD_Licensing.php' ) ) {
+    require plugin_dir_path( __FILE__ ) . 'EDD_Licensing.php';
 }
 
 require_once plugin_dir_path(__FILE__) . 'includes/simple-youtube-feed/pro-save.php';
@@ -106,5 +111,62 @@ add_action('wp_enqueue_scripts', function () {
     );
 });
 
+/**
+ * Adds the plugin license page to the admin menu.
+ *
+ * @return void
+ */
+// if (function_exists('gutenberg_market_licensing')) {
+// 	return;
+// } else {
+    function license_page() {
+        error_log("license page");
+    
+        add_settings_section(
+            'youtubeforwordpress_pro_license',
+            __( 'License' ),
+            'YouTubeForWPPro\EDDLicensing\license_key_settings_section',
+            YOUTUBEFORWORDPRESSPRO_PLUGIN_LICENSE_PAGE
+        );
+    
+        add_settings_field(
+            'youtubeforwordpress_pro_license_key',
+            '<label for="youtubeforwordpress_pro_license_key">' . __( 'License Key' ) . '</label>',
+            'YouTubeForWPPro\EDDLicensing\license_key_settings_field',
+            YOUTUBEFORWORDPRESSPRO_PLUGIN_LICENSE_PAGE,
+            'youtubeforwordpress_pro_license',
+        );
+    
+        ?>
+        <div class="wrap">
+            <h2><?php esc_html_e( 'License Options' ); ?></h2>
+            <form method="post" action="options.php">
+    
+                <?php
+                do_settings_sections( YOUTUBEFORWORDPRESSPRO_PLUGIN_LICENSE_PAGE );
+                settings_fields( 'youtubeforwordpress_pro_license' );
+                submit_button();
+                ?>
+    
+            </form>
+        <?php
+    }
 
+    /**
+ * Adds Pro-specific admin menu items.
+ */
+// Add Pro-specific submenus under 'roadmapwp-menu'
+add_action('admin_menu', function() {
+    error_log("admin menu created");
 
+    // Add License page under RoadMap menu
+    add_submenu_page(
+        'youtube-for-wordpress-settings', // Ensure parent menu is the same
+        __('License', 'yt-for-wp-pro'),
+        __('License', 'yt-for-wp-pro'),
+        'manage_options',
+        'youtubeforwordpresspro-license',
+        'YouTubeForWPPro\license_page' // Directly call the license page function
+    );
+
+}, 20);
