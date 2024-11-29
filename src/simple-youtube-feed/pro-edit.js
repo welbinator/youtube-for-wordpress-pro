@@ -10,8 +10,13 @@ const addProAttributes = (settings, name) => {
             ...settings.attributes,
             enableSearch: { type: 'boolean', default: false },
             enablePlaylistFilter: { type: 'boolean', default: false },
-            channelId: { type: 'string', default: '' }, // Add Channel ID as a Pro attribute
+            channelId: { type: 'string', default: '' },
+            contentTypes: {
+                type: 'object',
+                default: { standard: true, short: true, live: true },
+            }, // Add Content Types as a Pro attribute
         };
+        console.log('Pro Attributes Added:', settings.attributes);
     }
     return settings;
 };
@@ -22,6 +27,10 @@ const withProControls = createHigherOrderComponent((BlockEdit) => {
         const { attributes, setAttributes, name } = props;
 
         if (name === 'yt-for-wp/simple-youtube-feed') {
+            const { contentTypes = { standard: true, short: true, live: true } } = attributes;
+
+            console.log('Current Attributes in Editor:', attributes);
+
             return (
                 <>
                     <BlockEdit {...props} />
@@ -30,19 +39,57 @@ const withProControls = createHigherOrderComponent((BlockEdit) => {
                             <TextControl
                                 label="YouTube Channel ID (Pro)"
                                 value={attributes.channelId}
-                                onChange={(newChannelId) => setAttributes({ channelId: newChannelId })}
+                                onChange={(newChannelId) => {
+                                    setAttributes({ channelId: newChannelId });
+                                    console.log('Channel ID Updated:', newChannelId);
+                                }}
                                 help="Leave blank to use the default Channel ID from settings."
                             />
                             <ToggleControl
                                 label="Enable User Search (Pro)"
                                 checked={attributes.enableSearch}
-                                onChange={(value) => setAttributes({ enableSearch: value })}
+                                onChange={(value) => {
+                                    setAttributes({ enableSearch: value });
+                                    console.log('Enable Search Updated:', value);
+                                }}
                             />
                             <ToggleControl
                                 label="Enable Playlist Filter (Pro)"
                                 checked={attributes.enablePlaylistFilter}
-                                onChange={(value) => setAttributes({ enablePlaylistFilter: value })}
+                                onChange={(value) => {
+                                    setAttributes({ enablePlaylistFilter: value });
+                                    console.log('Enable Playlist Filter Updated:', value);
+                                }}
                             />
+                            <PanelBody title="Content Types">
+                                <ToggleControl
+                                    label="Standard"
+                                    checked={contentTypes.standard}
+                                    onChange={(checked) => {
+                                        const updatedContentTypes = { ...contentTypes, standard: checked };
+                                        setAttributes({ contentTypes: updatedContentTypes });
+                                        console.log('Content Types Updated:', updatedContentTypes);
+                                    }}
+                                />
+                                <ToggleControl
+                                    label="Short"
+                                    checked={contentTypes.short}
+                                    onChange={(checked) => {
+                                        const updatedContentTypes = { ...contentTypes, short: checked };
+                                        setAttributes({ contentTypes: updatedContentTypes });
+                                        console.log('Content Types Updated:', updatedContentTypes);
+                                    }}
+                                />
+                                <ToggleControl
+                                    label="Live"
+                                    checked={contentTypes.live}
+                                    onChange={(checked) => {
+                                        const updatedContentTypes = { ...contentTypes, live: checked };
+                                        setAttributes({ contentTypes: updatedContentTypes });
+                                        console.log('Content Types Updated:', updatedContentTypes);
+                                    }}
+                                />
+                            </PanelBody>
                         </PanelBody>
                     </InspectorControls>
                 </>
