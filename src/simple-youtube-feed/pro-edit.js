@@ -12,9 +12,22 @@ const addProAttributes = (settings, name) => {
             enablePlaylistFilter: { type: 'boolean', default: false },
             channelId: { type: 'string', default: '' }, // Add Channel ID as a Pro attribute
         };
+
+        // Add default mock playlists for editor preview
+        if (typeof wp.blockEditor !== 'undefined' && wp.blockEditor.useBlockProps) {
+            settings.attributes.playlists = {
+                type: 'array',
+                default: [
+                    { id: '', snippet: { title: 'All Videos' } },
+                    { id: 'mock1', snippet: { title: 'Mock Playlist 1' } },
+                    { id: 'mock2', snippet: { title: 'Mock Playlist 2' } },
+                ],
+            };
+        }
     }
     return settings;
 };
+
 
 // Add Pro controls to the Inspector panel
 const withProControls = createHigherOrderComponent((BlockEdit) => {

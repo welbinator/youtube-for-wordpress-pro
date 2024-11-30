@@ -26,30 +26,35 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
     let playlists = [];
     let nextPageToken = null;
+    let playlistCache = {};
 
     // Function to fetch playlists
     async function fetchPlaylists(loadMore = false) {
-        
+        if (playlistCache[effectiveChannelId] && !loadMore) {
+            return playlistCache[effectiveChannelId]; // Return cached playlists
+        }
+    
         let apiUrl = `${apiUrlBase}/playlists?part=snippet&channelId=${effectiveChannelId}&key=${apiKey}&maxResults=50`;
         if (nextPageToken && loadMore) {
             apiUrl += `&pageToken=${nextPageToken}`;
         }
-
+    
         try {
             const response = await fetch(apiUrl);
             const data = await response.json();
-
+    
             if (data.error) {
                 console.error('YouTube API Error:', data.error);
                 return;
             }
-
+    
             playlists = loadMore
                 ? [...playlists, ...data.items]
                 : [{ id: '', snippet: { title: 'All Videos' } }, ...data.items];
-
-            
+    
             nextPageToken = data.nextPageToken || null;
+    
+            playlistCache[effectiveChannelId] = playlists; // Cache playlists
         } catch (error) {
             console.error('Error fetching playlists:', error);
         }
@@ -135,12 +140,26 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
     // Initial fetch for playlists and render the UI
     try {
+        // Check if the container has already been initialized
+        if (container.getAttribute('data-initialized')) {
+            console.log(`Container #${container.id} already initialized.`);
+            return;
+        }
+    
+        // Mark the container as initialized to prevent redundant calls
+        container.setAttribute('data-initialized', 'true');
+    
+        // Fetch playlists once and cache them
         await fetchPlaylists();
         renderSearchAndFilterUI();
-
-        const videos = await fetchVideos(container);
-        renderVideos(container, videos, layout);
+    
+        // Fetch and render videos only if playlist filtering is disabled
+        if (!enablePlaylistFilter) {
+            const videos = await fetchVideos(container);
+            renderVideos(container, videos, layout);
+        }
     } catch (error) {
         console.error('Error during initialization:', error);
     }
+    
 });
