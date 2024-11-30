@@ -1,5 +1,8 @@
 import { addAction } from '@wordpress/hooks';
 
+// Define cache in the global scope of this module
+const cache = {};
+
 addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attributes) => {
     const {
         channelId,
@@ -9,7 +12,6 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
         enablePlaylistFilter = container.dataset.enablePlaylistFilter === 'true',
     } = attributes;
 
-    // Ensure the required functions are available
     const renderVideos = YT_FOR_WP.renderVideos || function () {
         console.error('renderVideos function is not available.');
     };
@@ -33,27 +35,27 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
         if (playlistCache[effectiveChannelId] && !loadMore) {
             return playlistCache[effectiveChannelId]; // Return cached playlists
         }
-    
+
         let apiUrl = `${apiUrlBase}/playlists?part=snippet&channelId=${effectiveChannelId}&key=${apiKey}&maxResults=50`;
         if (nextPageToken && loadMore) {
             apiUrl += `&pageToken=${nextPageToken}`;
         }
-    
+
         try {
             const response = await fetch(apiUrl);
             const data = await response.json();
-    
+
             if (data.error) {
                 console.error('YouTube API Error:', data.error);
                 return;
             }
-    
+
             playlists = loadMore
                 ? [...playlists, ...data.items]
                 : [{ id: '', snippet: { title: 'All Videos' } }, ...data.items];
-    
+
             nextPageToken = data.nextPageToken || null;
-    
+
             playlistCache[effectiveChannelId] = playlists; // Cache playlists
         } catch (error) {
             console.error('Error fetching playlists:', error);
@@ -62,9 +64,7 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
     // Render search and filter UI
     function renderSearchAndFilterUI() {
-        
         if (container.querySelector('.youtube-search-container')) {
-            
             return;
         }
 
@@ -73,7 +73,6 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
         // Playlist dropdown
         if (enablePlaylistFilter && playlists.length > 0) {
-            
             const dropdown = document.createElement('select');
             dropdown.classList.add('youtube-playlist-dropdown');
 
@@ -88,6 +87,11 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
                 try {
                     const playlistId = dropdown.value;
                     const searchQuery = container.querySelector('.youtube-search-bar')?.value.trim() || '';
+                    const cacheKey = `${container.id}-${channelId}-${maxVideos}-${searchQuery}-${playlistId}`;
+
+                    // Clear cache for this interaction
+                    delete cache[cacheKey];
+
                     const videos = await fetchVideos(container, searchQuery, playlistId);
                     renderVideos(container, videos, layout);
                 } catch (error) {
@@ -100,7 +104,6 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
         // Search bar
         if (enableSearch) {
-            
             const searchBar = document.createElement('input');
             searchBar.type = 'text';
             searchBar.placeholder = 'Search videos';
@@ -119,9 +122,14 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
             searchButton.addEventListener('click', async () => {
                 try {
-                    const keyword = searchBar.value.trim();
+                    const searchQuery = searchBar.value.trim();
                     const playlistId = container.querySelector('.youtube-playlist-dropdown')?.value || '';
-                    const videos = await fetchVideos(container, keyword, playlistId);
+                    const cacheKey = `${container.id}-${channelId}-${maxVideos}-${searchQuery}-${playlistId}`;
+
+                    // Clear cache for this interaction
+                    delete cache[cacheKey];
+
+                    const videos = await fetchVideos(container, searchQuery, playlistId);
                     renderVideos(container, videos, layout);
                 } catch (error) {
                     console.error('Error handling search button click:', error);
@@ -133,27 +141,21 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
         }
 
         if (searchContainer.children.length > 0) {
-           
             container.prepend(searchContainer);
         }
     }
 
     // Initial fetch for playlists and render the UI
     try {
-        // Check if the container has already been initialized
         if (container.getAttribute('data-initialized')) {
             console.log(`Container #${container.id} already initialized.`);
             return;
         }
-    
-        // Mark the container as initialized to prevent redundant calls
+
         container.setAttribute('data-initialized', 'true');
-    
-        // Fetch playlists once and cache them
         await fetchPlaylists();
         renderSearchAndFilterUI();
-    
-        // Fetch and render videos only if playlist filtering is disabled
+
         if (!enablePlaylistFilter) {
             const videos = await fetchVideos(container);
             renderVideos(container, videos, layout);
@@ -161,5 +163,4 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
     } catch (error) {
         console.error('Error during initialization:', error);
     }
-    
 });
