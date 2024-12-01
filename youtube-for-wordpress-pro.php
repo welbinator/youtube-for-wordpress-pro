@@ -75,8 +75,13 @@ function load_pro_plugin() {
         return;
     }
 
-    // Include required files for Pro functionality.
-    require_once YT_FOR_WP_PRO_PATH . 'includes/pro-features.php';
+    // Include required files for Video CPT.
+    require_once YT_FOR_WP_PRO_PATH . 'includes/pro-features/class-video-post-type.php';
+
+
+    // Initialize the Video Post Type
+    \YouTubeForWPPro\VideoCPT\Video_Post_Type::init();
+
 
     // Initialize Pro features.
     add_action('plugins_loaded', function () {
