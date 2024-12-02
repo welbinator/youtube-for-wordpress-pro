@@ -121,7 +121,7 @@ add_action('wp_enqueue_scripts', function () {
 
 add_action('admin_enqueue_scripts', function ($hook_suffix) {
     // Only enqueue on the Import Videos page
-    if ('youtube-for-wordpress_page_yt-for-wp-import-videos' !== $hook_suffix) {
+    if ('yt-for-wp_page_yt-for-wp-import-videos' !== $hook_suffix) {
         return;
     }
 
@@ -132,11 +132,14 @@ add_action('admin_enqueue_scripts', function ($hook_suffix) {
         YOUTUBE_FOR_WP_PRO_VERSION,
         true
     );
+    
 
     wp_localize_script('yt-for-wp-pro-video-import', 'ytForWPPro', [
         'nonce' => wp_create_nonce('yt-for-wp-import-videos'),
+        'ajaxUrl' => admin_url('admin-ajax.php'),
     ]);
 });
+
 
 
 /**

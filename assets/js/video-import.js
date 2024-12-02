@@ -9,14 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
             importButton.textContent = 'Importing...';
 
             try {
+                const formData = new FormData();
+                formData.append('action', 'yt_for_wp_pro_import_videos');
+                formData.append('limit', limit);
+                formData.append('_ajax_nonce', ytForWPPro.nonce);
+
                 const response = await fetch(ajaxurl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'yt_for_wp_pro_import_videos',
-                        limit: limit,
-                        _ajax_nonce: ytForWPPro.nonce,
-                    }),
+                    body: formData,
                 });
 
                 const result = await response.json();
