@@ -38,6 +38,9 @@ if ( file_exists( plugin_dir_path( __FILE__ ) . 'EDD_Licensing.php' ) ) {
 
 require_once plugin_dir_path(__FILE__) . 'includes/simple-youtube-feed/pro-save.php';
 require_once plugin_dir_path(__FILE__) . 'includes/youtube-live/pro-save.php';
+require_once plugin_dir_path(__FILE__) . 'includes/pro-settings.php';
+require_once plugin_dir_path(__FILE__) . 'includes/ajax-handlers.php';
+require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
 
 /**
  * Check if the free version is active.
@@ -114,7 +117,40 @@ add_action('wp_enqueue_scripts', function () {
         $asset_file['version'],      // Properly extracted version
         true
     );
+
+    if (is_singular('yt-4-wp-video')) {
+        // Enqueue the CSS file
+        wp_enqueue_style(
+            'yt-for-wp-pro-single-video-css',
+            YT_FOR_WP_PRO_URL . 'assets/css/single-video.css',
+            [],
+            YOUTUBE_FOR_WP_PRO_VERSION
+        );
+    }
 });
+
+add_action('admin_enqueue_scripts', function ($hook_suffix) {
+    // Only enqueue on the Import Videos page
+    if ('yt-for-wp_page_yt-for-wp-import-videos' !== $hook_suffix) {
+        return;
+    }
+
+    wp_enqueue_script(
+        'yt-for-wp-pro-video-import',
+        YT_FOR_WP_PRO_URL . 'assets/js/video-import.js',
+        ['jquery'],
+        YOUTUBE_FOR_WP_PRO_VERSION,
+        true
+    );
+    
+
+    wp_localize_script('yt-for-wp-pro-video-import', 'ytForWPPro', [
+        'nonce' => wp_create_nonce('yt-for-wp-import-videos'),
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+    ]);
+});
+
+
 
 /**
  * Adds the plugin license page to the admin menu.
@@ -162,7 +198,7 @@ add_action('wp_enqueue_scripts', function () {
  */
 // Add Pro-specific submenus under 'roadmapwp-menu'
 add_action('admin_menu', function() {
-    error_log("admin menu created");
+    
 
     // Add License page under RoadMap menu
     add_submenu_page(
@@ -173,5 +209,24 @@ add_action('admin_menu', function() {
         'youtubeforwordpresspro-license',
         'YouTubeForWPPro\license_page' // Directly call the license page function
     );
+    add_submenu_page(
+        'youtube-for-wordpress-settings', // Parent slug (main menu item)
+        __('Import Videos', 'yt-for-wp-pro'), // Page title
+        __('Import Videos', 'yt-for-wp-pro'), // Menu title
+        'manage_options', // Capability
+        'yt-for-wp-import-videos', // Menu slug
+        'YouTubeForWPPro\Settings\render_import_videos_page' // Callback function
+    );
 
 }, 20);
+
+add_filter('template_include', function ($template) {
+    if (is_singular('yt-4-wp-video')) {
+        // Path to your custom template
+        $custom_template = YT_FOR_WP_PRO_PATH . 'templates/single-video.php';
+        if (file_exists($custom_template)) {
+            return $custom_template;
+        }
+    }
+    return $template;
+});
