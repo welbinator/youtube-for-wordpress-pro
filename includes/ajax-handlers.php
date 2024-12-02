@@ -1,5 +1,4 @@
 <?php
-
 add_action('wp_ajax_yt_for_wp_pro_import_videos', function () {
     check_ajax_referer('yt-for-wp-import-videos', '_ajax_nonce');
 
@@ -16,6 +15,7 @@ add_action('wp_ajax_yt_for_wp_pro_import_videos', function () {
         'channelId' => $channel_id,
         'maxResults' => min($limit ?: 50, 50),
         'type' => 'video',
+        'order' => 'date',
         'key' => $api_key,
     ], 'https://www.googleapis.com/youtube/v3/search');
 
@@ -39,15 +39,14 @@ add_action('wp_ajax_yt_for_wp_pro_import_videos', function () {
             continue;
         }
 
+        $video_url = sprintf('https://www.youtube.com/watch?v=%s', $video_id);
+
         $post_id = wp_insert_post([
             'post_title'   => sanitize_text_field($snippet['title']),
-            'post_content' => sprintf(
-                '<iframe src="https://www.youtube.com/embed/%s" frameborder="0" allowfullscreen></iframe><p>%s</p>',
-                esc_attr($video_id),
-                esc_html($snippet['description'])
-            ),
+            'post_content' => esc_html($snippet['description']),
             'post_status'  => 'publish',
             'post_type'    => 'yt-4-wp-video',
+            'post_date'    => gmdate('Y-m-d H:i:s', strtotime($snippet['publishedAt'])),
         ]);
 
         if ($post_id && !is_wp_error($post_id)) {
@@ -57,6 +56,12 @@ add_action('wp_ajax_yt_for_wp_pro_import_videos', function () {
 
             // Add published date as custom field
             update_post_meta($post_id, '_yt_published_at', sanitize_text_field($snippet['publishedAt']));
+
+            // Add video ID as custom field
+            update_post_meta($post_id, '_yt_video_id', $video_id);
+
+            // Add video URL as custom field
+            update_post_meta($post_id, '_yt_video_url', esc_url_raw($video_url));
         }
     }
 

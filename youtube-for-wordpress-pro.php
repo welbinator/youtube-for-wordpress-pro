@@ -117,6 +117,16 @@ add_action('wp_enqueue_scripts', function () {
         $asset_file['version'],      // Properly extracted version
         true
     );
+
+    if (is_singular('yt-4-wp-video')) {
+        // Enqueue the CSS file
+        wp_enqueue_style(
+            'yt-for-wp-pro-single-video-css',
+            YT_FOR_WP_PRO_URL . 'assets/css/single-video.css',
+            [],
+            YOUTUBE_FOR_WP_PRO_VERSION
+        );
+    }
 });
 
 add_action('admin_enqueue_scripts', function ($hook_suffix) {
@@ -209,3 +219,14 @@ add_action('admin_menu', function() {
     );
 
 }, 20);
+
+add_filter('template_include', function ($template) {
+    if (is_singular('yt-4-wp-video')) {
+        // Path to your custom template
+        $custom_template = YT_FOR_WP_PRO_PATH . 'templates/single-video.php';
+        if (file_exists($custom_template)) {
+            return $custom_template;
+        }
+    }
+    return $template;
+});
