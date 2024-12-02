@@ -1,0 +1,56 @@
+name: Create Draft Release for YouTube Pro
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release Tag'
+        required: true
+      is_draft:
+        description: 'Create as Draft Release (true/false)'
+        required: false
+        default: 'true'
+      is_prerelease:
+        description: 'Mark as Pre-release (true/false)'
+        required: false
+        default: 'false'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Create temporary directory
+      run: mkdir temp_dir
+
+    - name: Copy files to temporary directory
+      run: |
+        find . -maxdepth 1 -not -name 'temp_dir' -not -name '.' -not -name '.git' -not -name '.github' -exec cp -r {} temp_dir/ \;
+
+    - name: Rename directory
+      run: mv temp_dir youtube-for-wordpress-pro
+
+    - name: Zip the folder
+      run: |
+        zip -r youtube-for-wordpress-pro-${{ github.event.inputs.tag }}.zip youtube-for-wordpress-pro \
+        -x "*.git/*" "*.github/*" \
+        "youtube-for-wordpress-pro/package.json" \
+        "youtube-for-wordpress-pro/package-lock.json" \
+        "youtube-for-wordpress-pro/src/*" \
+        "youtube-for-wordpress-pro/node_modules/*" \
+        "youtube-for-wordpress-pro/.gitignore"
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: youtube-for-wordpress-pro-${{ github.event.inputs.tag }}.zip
+        tag_name: ${{ github.event.inputs.tag }}
+        draft: ${{ github.event.inputs.is_draft }}
+        prerelease: ${{ github.event.inputs.is_prerelease }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  contents: write

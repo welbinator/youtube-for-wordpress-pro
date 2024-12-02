@@ -57,28 +57,25 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
 
     // Render search and filter UI
     function renderSearchAndFilterUI() {
-        
-        if (container.querySelector('.youtube-search-container')) {
-            
+        if (container.querySelector('.youtube-filter-container')) {
             return;
         }
-
+    
         const searchContainer = document.createElement('div');
-        searchContainer.classList.add('youtube-search-container');
-
+        searchContainer.classList.add('youtube-filter-container');
+    
         // Playlist dropdown
         if (enablePlaylistFilter && playlists.length > 0) {
-            
             const dropdown = document.createElement('select');
             dropdown.classList.add('youtube-playlist-dropdown');
-
+    
             playlists.forEach(({ id, snippet }) => {
                 const option = document.createElement('option');
                 option.value = id;
                 option.textContent = snippet.title;
                 dropdown.appendChild(option);
             });
-
+    
             dropdown.addEventListener('change', async () => {
                 try {
                     const playlistId = dropdown.value;
@@ -89,29 +86,31 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
                     console.error('Error handling playlist dropdown change:', error);
                 }
             });
-
+    
             searchContainer.appendChild(dropdown);
         }
-
+    
         // Search bar
         if (enableSearch) {
-            
+            const youtubeSearchContainer = document.createElement('div');
+            youtubeSearchContainer.classList.add('youtube-search-container');
+    
             const searchBar = document.createElement('input');
             searchBar.type = 'text';
             searchBar.placeholder = 'Search videos';
             searchBar.classList.add('youtube-search-bar');
-
+    
             const searchButton = document.createElement('button');
             searchButton.textContent = 'Search';
             searchButton.classList.add('youtube-search-button');
-
+    
             searchBar.addEventListener('keypress', (event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
                     searchButton.click();
                 }
             });
-
+    
             searchButton.addEventListener('click', async () => {
                 try {
                     const keyword = searchBar.value.trim();
@@ -122,16 +121,18 @@ addAction('yt_for_wp_simple_feed_view', 'yt-for-wp-pro', async (container, attri
                     console.error('Error handling search button click:', error);
                 }
             });
-
-            searchContainer.appendChild(searchBar);
-            searchContainer.appendChild(searchButton);
+    
+            youtubeSearchContainer.appendChild(searchBar);
+            youtubeSearchContainer.appendChild(searchButton);
+    
+            searchContainer.appendChild(youtubeSearchContainer);
         }
-
+    
         if (searchContainer.children.length > 0) {
-           
             container.prepend(searchContainer);
         }
     }
+    
 
     // Initial fetch for playlists and render the UI
     try {
