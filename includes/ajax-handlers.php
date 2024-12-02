@@ -106,7 +106,9 @@ add_action('wp_ajax_yt_for_wp_pro_import_videos', function () {
         if ($post_id && !is_wp_error($post_id)) {
             // Set featured image (video thumbnail)
             $thumbnail_url = $snippet['thumbnails']['high']['url'];
-            yt_for_wp_set_post_thumbnail_from_url($post_id, $thumbnail_url);
+            if (!empty($thumbnail_url)) {
+                yt_for_wp_set_post_thumbnail_from_url($post_id, $thumbnail_url);
+            }
 
             // Add published date as custom field
             update_post_meta($post_id, '_yt_published_at', sanitize_text_field($snippet['publishedAt']));
