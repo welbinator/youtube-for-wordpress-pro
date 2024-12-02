@@ -68,27 +68,31 @@ add_action('wp_ajax_yt_for_wp_pro_import_videos', function () {
         wp_send_json_error(__('No videos found.', 'yt-for-wp-pro'));
     }
 
-    foreach ($videos['items'] as $video) {
-        $video_id = $video['id']['videoId'] ?? null;
+    // Get full details for each video
+    $video_ids = array_map(fn($video) => $video['id']['videoId'], $videos['items']);
+    $videos_details_url = add_query_arg([
+        'part' => 'snippet',
+        'id'   => implode(',', $video_ids),
+        'key'  => $api_key,
+    ], 'https://www.googleapis.com/youtube/v3/videos');
+
+    $details_response = wp_remote_get($videos_details_url);
+
+    if (is_wp_error($details_response)) {
+        wp_send_json_error($details_response->get_error_message());
+    }
+
+    $details = json_decode(wp_remote_retrieve_body($details_response), true);
+
+    if (empty($details['items'])) {
+        wp_send_json_error(__('No video details found.', 'yt-for-wp-pro'));
+    }
+
+    foreach ($details['items'] as $video) {
+        $video_id = $video['id'];
         $snippet = $video['snippet'] ?? null;
 
         if (!$video_id || !$snippet) {
-            continue;
-        }
-
-        // Check if the video is already imported
-        $existing_video = new WP_Query([
-            'post_type'  => 'yt-4-wp-video',
-            'meta_query' => [
-                [
-                    'key'   => '_yt_video_id',
-                    'value' => $video_id,
-                ],
-            ],
-        ]);
-
-        if ($existing_video->have_posts()) {
-            // Skip if the video already exists
             continue;
         }
 
@@ -106,9 +110,7 @@ add_action('wp_ajax_yt_for_wp_pro_import_videos', function () {
         if ($post_id && !is_wp_error($post_id)) {
             // Set featured image (video thumbnail)
             $thumbnail_url = $snippet['thumbnails']['high']['url'];
-            if (!empty($thumbnail_url)) {
-                yt_for_wp_set_post_thumbnail_from_url($post_id, $thumbnail_url);
-            }
+            yt_for_wp_set_post_thumbnail_from_url($post_id, $thumbnail_url);
 
             // Add published date as custom field
             update_post_meta($post_id, '_yt_published_at', sanitize_text_field($snippet['publishedAt']));

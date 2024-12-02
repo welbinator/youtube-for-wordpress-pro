@@ -50,7 +50,7 @@ $embed_url = $video_id ? "https://www.youtube.com/embed/$video_id" : '';
     
     <div class="video-description">
         <h2>Description</h2>
-        <p><?php the_content(); ?></p>
+        <p><?php echo apply_filters('the_content', get_the_content()); ?></p>
     </div>
 </div>
 
