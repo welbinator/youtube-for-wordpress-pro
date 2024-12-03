@@ -17,7 +17,7 @@ if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 }
 
 // retrieve our license key from the DB
-$license_key = trim( get_option( 'youtubeforwordpresspro_license_key' ) );
+$license_key = trim( get_option( 'youtubeforwordpress_pro_license_key' ) );
 // setup the updater
 $edd_updater = new \EDD_SL_Plugin_Updater(
 	YOUTUBEFORWORDPRESSPRO_STORE_URL,
@@ -46,14 +46,14 @@ function license_key_settings_section() {
  * @return void
  */
 function license_key_settings_field() {
-	$license = get_option( 'youtubeforwordpresspro_license_key' );
-	$status  = get_option( 'youtubeforwordpresspro_license_status' );
+	$license = get_option( 'youtubeforwordpress_pro_license_key' );
+	$status  = get_option( 'youtubeforwordpress_pro_license_status' );
 
 	?>
 	<p class="description"><?php esc_html_e( 'Enter your license key.' ); ?></p>
 	<?php
 	printf(
-		'<input type="text" class="regular-text" id="youtubeforwordpresspro_license_key" name="youtubeforwordpresspro_license_key" value="%s" />',
+		'<input type="text" class="regular-text" id="youtubeforwordpress_pro_license_key" name="youtubeforwordpress_pro_license_key" value="%s" />',
 		esc_attr( $license )
 	);
 	$button = array(
@@ -78,9 +78,14 @@ function license_key_settings_field() {
  * @return void
  */
 function register_option() {
-	register_setting( 'youtubeforwordpresspro_license', 'youtubeforwordpresspro_license_key', __NAMESPACE__ . '\edd_sanitize_license' );
+    register_setting(
+        'youtubeforwordpress_pro_license', // Option group
+        'youtubeforwordpress_pro_license_key', // Option name
+        __NAMESPACE__ . '\edd_sanitize_license' // Sanitize callback
+    );
 }
-add_action( 'admin_init', __NAMESPACE__ . '\register_option' );
+add_action('admin_init', __NAMESPACE__ . '\register_option');
+
 
 /**
  * Sanitizes the license key.
@@ -89,9 +94,9 @@ add_action( 'admin_init', __NAMESPACE__ . '\register_option' );
  * @return string
  */
 function edd_sanitize_license( $new ) {
-	$old = get_option( 'youtubeforwordpresspro_license_key' );
+	$old = get_option( 'youtubeforwordpress_pro_license_key' );
 	if ( $old && $old !== $new ) {
-		delete_option( 'youtubeforwordpresspro_license_status' ); // new license has been entered, so must reactivate
+		delete_option( 'youtubeforwordpress_pro_license_status' ); // new license has been entered, so must reactivate
 	}
 
 	return sanitize_text_field( $new );
@@ -115,9 +120,9 @@ function activate_license() {
 	}
 
 	// retrieve the license from the database
-	$license = trim( get_option( 'youtubeforwordpresspro_license_key' ) );
+	$license = trim( get_option( 'youtubeforwordpress_pro_license_key' ) );
 	if ( ! $license ) {
-		$license = ! empty( $_POST['youtubeforwordpresspro_license_key'] ) ? sanitize_text_field( $_POST['youtubeforwordpresspro_license_key'] ) : '';
+		$license = ! empty( $_POST['youtubeforwordpress_pro_license_key'] ) ? sanitize_text_field( $_POST['youtubeforwordpress_pro_license_key'] ) : '';
 	}
 	if ( ! $license ) {
 		return;
@@ -214,9 +219,9 @@ function activate_license() {
 
 	// $license_data->license will be either "valid" or "invalid"
 	if ( 'valid' === $license_data->license ) {
-		update_option( 'youtubeforwordpresspro_license_key', $license );
+		update_option( 'youtubeforwordpress_pro_license_key', $license );
 	}
-	update_option( 'youtubeforwordpresspro_license_status', $license_data->license );
+	update_option( 'youtubeforwordpress_pro_license_status', $license_data->license );
 	wp_safe_redirect( admin_url( 'admin.php?page=' . YOUTUBEFORWORDPRESSPRO_PLUGIN_LICENSE_PAGE ) );
 	exit();
 }
@@ -239,7 +244,7 @@ function deactivate_license() {
 		}
 
 		// retrieve the license from the database
-		$license = trim( get_option( 'youtubeforwordpresspro_license_key' ) );
+		$license = trim( get_option( 'youtubeforwordpress_pro_license_key' ) );
 
 		// data to send in our API request
 		$api_params = array(
@@ -288,7 +293,7 @@ function deactivate_license() {
 
 		// $license_data->license will be either "deactivated" or "failed"
 		if ( 'deactivated' === $license_data->license ) {
-			delete_option( 'youtubeforwordpresspro_license_status' );
+			delete_option( 'youtubeforwordpress_pro_license_status' );
 		}
 
 		wp_safe_redirect( admin_url( 'admin.php?page=' . YOUTUBEFORWORDPRESSPRO_PLUGIN_LICENSE_PAGE ) );
@@ -307,7 +312,7 @@ add_action( 'admin_init', __NAMESPACE__ . '\deactivate_license' );
  */
 function check_license() {
 
-	$license = trim( get_option( 'youtubeforwordpresspro_license_key' ) );
+	$license = trim( get_option( 'youtubeforwordpress_pro_license_key' ) );
 
 	$api_params = array(
 		'edd_action'  => 'check_license',
