@@ -196,11 +196,11 @@ add_action('admin_enqueue_scripts', function ($hook_suffix) {
     /**
  * Adds Pro-specific admin menu items.
  */
-// Add Pro-specific submenus under 'roadmapwp-menu'
+
 add_action('admin_menu', function() {
     
 
-    // Add License page under RoadMap menu
+   
     add_submenu_page(
         'youtube-for-wordpress-settings', // Ensure parent menu is the same
         __('License', 'yt-for-wp-pro'),
@@ -220,13 +220,39 @@ add_action('admin_menu', function() {
 
 }, 20);
 
-add_filter('template_include', function ($template) {
-    if (is_singular('yt-4-wp-video')) {
-        // Path to your custom template
-        $custom_template = YT_FOR_WP_PRO_PATH . 'templates/single-video.php';
-        if (file_exists($custom_template)) {
-            return $custom_template;
+
+// Register templates in the theme dropdown.
+add_filter( 'theme_page_templates', __NAMESPACE__ . '\\add_custom_page_templates' );
+add_filter( 'template_include', __NAMESPACE__ . '\\load_custom_page_template' );
+
+/**
+ * Add custom page templates to the page template dropdown.
+ *
+ * @param array $templates List of page templates.
+ * @return array Modified list of templates.
+ */
+function add_custom_page_templates( $templates ) {
+    $templates['templates/videos-grid.php'] = __( 'Videos Page Grid View', 'yt-for-wp-pro' );
+    $templates['templates/videos-list.php'] = __( 'Videos Page List View', 'yt-for-wp-pro' );
+    return $templates;
+}
+
+/**
+ * Load the custom page template.
+ *
+ * @param string $template Path to the current template.
+ * @return string Path to the new template if applicable.
+ */
+function load_custom_page_template( $template ) {
+    if ( is_page() ) {
+        $template_slug = get_page_template_slug();
+        $plugin_template = YT_FOR_WP_PRO_PATH . $template_slug;
+
+        if ( $template_slug && file_exists( $plugin_template ) ) {
+            return $plugin_template;
         }
     }
+
     return $template;
-});
+}
+
