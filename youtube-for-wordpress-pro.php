@@ -118,16 +118,30 @@ add_action('wp_enqueue_scripts', function () {
         true
     );
 
-    if (is_singular('yt-4-wp-video')) {
-        // Enqueue the CSS file
+    // Get the current page template slug
+    $template_slug = get_page_template_slug();
+
+    // Enqueue CSS for the grid or list view templates
+    if (in_array($template_slug, ['templates/videos-grid.php', 'templates/videos-list.php'], true)) {
         wp_enqueue_style(
-            'yt-for-wp-pro-single-video-css',
-            YT_FOR_WP_PRO_URL . 'assets/css/single-video.css',
+            'yt-for-wp-pro-video-templates-css',
+            YT_FOR_WP_PRO_URL . 'assets/css/video-templates.css',
             [],
             YOUTUBE_FOR_WP_PRO_VERSION
         );
+
+        // Enqueue the JavaScript for modal functionality
+        wp_enqueue_script(
+            'yt-for-wp-pro-video-templates-js',
+            YT_FOR_WP_PRO_URL . 'assets/js/video-templates.js',
+            [],
+            YOUTUBE_FOR_WP_PRO_VERSION,
+            true
+        );
     }
 });
+
+
 
 add_action('admin_enqueue_scripts', function ($hook_suffix) {
     // Only enqueue on the Import Videos page
