@@ -1,6 +1,6 @@
 {
   "name": "youtube-for-wordpress-pro",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "main": "index.js",
   "scripts": {
     "build": "wp-scripts build",
