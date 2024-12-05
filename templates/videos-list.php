@@ -27,19 +27,27 @@ get_header(); ?>
             <?php while ( $videos->have_posts() ) : $videos->the_post(); ?>
                 <?php $video_id = get_post_meta( get_the_ID(), '_yt_video_id', true ); ?>
                 <li class="video-list-item">
-                    <a href="#" class="video-list-thumbnail" data-video-url="https://www.youtube.com/embed/<?php echo esc_attr( $video_id ); ?>">
-                        <div class="video-list-thumbnail">
-                            <?php if ( has_post_thumbnail() ) : ?>
-                                <?php the_post_thumbnail( 'thumbnail' ); ?>
-                            <?php else : ?>
-                                <img src="<?php echo esc_url( plugins_url( '/assets/default-thumbnail.jpg', __FILE__ ) ); ?>" alt="<?php the_title(); ?>">
-                            <?php endif; ?>
-                        </div>
-                        <div class="video-list-content">
-                            <h2><?php the_title(); ?></h2>
-                            <p><?php echo wp_trim_words( get_the_excerpt(), 15 ); ?></p>
-                        </div>
+                    
+                <div class="video-list-thumbnail">
+                    <a href="#" class="video-list-thumbnail-link" data-video-url="https://www.youtube.com/embed/<?php echo esc_attr( $video_id ); ?>">
+                        <?php if ( has_post_thumbnail() ) : ?>
+                            <?php the_post_thumbnail( 'full' ); ?>
+                        <?php else : ?>
+                            <img src="<?php echo esc_url( plugins_url( '/assets/default-thumbnail.jpg', __FILE__ ) ); ?>" alt="<?php the_title(); ?>">
+                        <?php endif; ?>
+                        <!-- Play button overlay -->
+                        <div class="play-button-overlay"></div>
                     </a>
+                </div>
+
+                    
+                    <div class="video-list-content">
+                    <a href="<?php the_permalink(); ?>">    
+                        <h2><?php the_title(); ?></h2>
+                    </a>
+                        <p><?php echo wp_trim_words( get_the_excerpt(), 15 ); ?></p>
+                    </div>
+                    
                 </li>
             <?php endwhile; ?>
         </ul>
