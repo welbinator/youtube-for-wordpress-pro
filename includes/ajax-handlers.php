@@ -96,7 +96,8 @@ add_action('wp_ajax_yt_for_wp_pro_import_videos', function () {
             continue;
         }
 
-        $video_url = sprintf('https://www.youtube.com/watch?v=%s', $video_id);
+        $video_url = sprintf('https://www.youtube.com/embed/%s', $video_id);
+
 
         // Insert the video post
         $post_id = wp_insert_post([
