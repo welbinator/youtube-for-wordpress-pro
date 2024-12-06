@@ -114,6 +114,8 @@ width: 300px;
     font-size: 16px;
     margin: 0;
     padding-inline: 15px;
+    overflow: hidden;
+    text-wrap: wrap;
 }
 .video-grid-thumbnail-link {
     display: inline-block;
