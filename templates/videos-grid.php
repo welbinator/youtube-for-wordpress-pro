@@ -36,8 +36,10 @@ get_header(); ?>
                             <img src="<?php echo esc_url( plugins_url( '/assets/default-thumbnail.jpg', __FILE__ ) ); ?>" alt="<?php the_title(); ?>">
                         <?php endif; ?>
                     </a>
+                    <a class="video-title video-grid-title" href="<?php the_permalink(); ?>"> 
                         <h2><?php the_title(); ?></h2>
-                    
+                    </a>
+                    <p class="video-description video-grid-description"><?php echo wp_trim_words( get_the_excerpt(), 20 ); ?></p>
                 </div>
             <?php endwhile; ?>
             <?php wp_reset_postdata(); ?>

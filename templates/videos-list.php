@@ -42,10 +42,10 @@ get_header(); ?>
 
                     
                     <div class="video-list-content">
-                    <a href="<?php the_permalink(); ?>">    
+                    <a class="video-title video-list-title" href="<?php the_permalink(); ?>">    
                         <h2><?php the_title(); ?></h2>
                     </a>
-                        <p><?php echo wp_trim_words( get_the_excerpt(), 15 ); ?></p>
+                        <p class="video-description video-list-description"><?php echo wp_trim_words( get_the_excerpt(), 20 ); ?></p>
                     </div>
                     
                 </li>
