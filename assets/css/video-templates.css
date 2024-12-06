@@ -51,23 +51,30 @@
 
 .video-list-item {
     display: flex;
-    gap: 15px;
-    padding: 15px 0;
-    border-bottom: 1px solid #ddd;
-    align-items: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .1);
+    height: 169px;
+    
 }
-
+.video-list-thumbnail {
+width: 300px;
+}
 .video-list-thumbnail img {
-    max-width: 120px;
-    height: auto;
-    display: block;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    height: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    max-width: unset;
+    width: 300px;
 }
-
 .video-list-content h2 {
     font-size: 18px;
     margin: 0 0 5px;
 }
-
+.video-list-content {
+    padding: 1rem;
+}
 .video-list-content p {
     margin: 0;
     color: #555;
@@ -89,9 +96,10 @@
     border: 1px solid #ddd;
     padding: 15px;
     text-align: center;
+    position: relative;
 }
 .video-grid-item img {
-    max-width: 100%;
+  
     height: auto;
     display: block;
     margin: 0 auto 10px;
@@ -99,4 +107,49 @@
 .video-grid-item h2 {
     font-size: 16px;
     margin: 0;
+}
+.video-grid-thumbnail-link {
+    display: inline-block;
+    position: relative;
+}
+.video-list-thumbnail {
+    position: relative;
+    display: inline-block;
+}
+
+.play-button-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.play-button-overlay::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 20px solid white;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+}
+
+@media screen and (max-width: 640px) {
+    .video-list-item {
+        flex-direction: column;
+    }
+    .video-list-thumbnail, .video-list-thumbnail img {
+        width: 100%;
+    }
+    li.video-list-item {
+        height: unset;
+    }
 }

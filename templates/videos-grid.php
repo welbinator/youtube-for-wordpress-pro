@@ -27,14 +27,17 @@ get_header(); ?>
             <?php while ( $videos->have_posts() ) : $videos->the_post(); ?>
                 <?php $video_url = get_post_meta( get_the_ID(), '_yt_video_url', true ); ?>
                 <div class="video-grid-item">
-                    <a href="#" class="video-thumbnail" data-video-url="<?php echo esc_url( $video_url ); ?>">
+                    <a href="#" class="video-grid-thumbnail-link" data-video-url="<?php echo esc_url( $video_url ); ?>">
                         <?php if ( has_post_thumbnail() ) : ?>
                             <?php the_post_thumbnail( 'medium' ); ?>
+                            <div class="play-button-overlay"></div>
+                    
                         <?php else : ?>
                             <img src="<?php echo esc_url( plugins_url( '/assets/default-thumbnail.jpg', __FILE__ ) ); ?>" alt="<?php the_title(); ?>">
                         <?php endif; ?>
-                        <h2><?php the_title(); ?></h2>
                     </a>
+                        <h2><?php the_title(); ?></h2>
+                    
                 </div>
             <?php endwhile; ?>
             <?php wp_reset_postdata(); ?>

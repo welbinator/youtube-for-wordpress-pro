@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeModal = document.getElementById('video-modal-close');
 
     // Open modal on thumbnail click
-    document.querySelectorAll('.video-thumbnail, .video-list-thumbnail').forEach(item => {
+    document.querySelectorAll('.video-grid-thumbnail-link, .video-list-thumbnail-link').forEach(item => {
         item.addEventListener('click', function (event) {
             event.preventDefault();
             const videoUrl = this.getAttribute('data-video-url');
