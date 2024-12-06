@@ -75,6 +75,8 @@ width: 300px;
 .video-list-content h2 {
     font-size: 18px;
     margin: 0 0 5px;
+    overflow: hidden;
+    text-wrap: wrap;
 }
 .video-list-content {
     padding-inline: 1rem;
@@ -83,6 +85,8 @@ width: 300px;
     margin: 0;
     color: #555;
     font-size: 14px;
+    overflow: hidden;
+    text-wrap: wrap;
 }
 
 /* Grid template styles */
