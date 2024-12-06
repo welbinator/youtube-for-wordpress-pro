@@ -139,6 +139,19 @@ add_action('wp_enqueue_scripts', function () {
             true
         );
     }
+
+    if (is_singular('yt-4-wp-video')) {
+        $current_template = YT_FOR_WP_PRO_PATH . 'templates/single-video.php';
+        if (file_exists($current_template)) {
+            wp_enqueue_style(
+                'yt-for-wp-pro-single-video-template-css',
+                YT_FOR_WP_PRO_URL . 'assets/css/single-video.css',
+                [],
+                YOUTUBE_FOR_WP_PRO_VERSION
+            );
+        }
+    }
+
 });
 
 
@@ -238,6 +251,24 @@ add_action('admin_menu', function() {
 // Register templates in the theme dropdown.
 add_filter( 'theme_page_templates', __NAMESPACE__ . '\\add_custom_page_templates' );
 add_filter( 'template_include', __NAMESPACE__ . '\\load_custom_page_template' );
+add_filter( 'template_include', __NAMESPACE__ . '\\use_single_video_template' );
+
+
+/**
+ * Load the custom template for single video posts.
+ *
+ * @param string $template The path to the current template.
+ * @return string The path to the custom template, if applicable.
+ */
+function use_single_video_template($template) {
+    if (is_singular('yt-4-wp-video')) {
+        $custom_template = YT_FOR_WP_PRO_PATH . 'templates/single-video.php';
+        if (file_exists($custom_template)) {
+            return $custom_template;
+        }
+    }
+    return $template;
+}
 
 /**
  * Add custom page templates to the page template dropdown.
