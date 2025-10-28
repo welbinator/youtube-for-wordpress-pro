@@ -99,6 +99,26 @@ add_action('wp_ajax_yt_for_wp_pro_import_videos', function () {
         $video_url = sprintf('https://www.youtube.com/embed/%s', $video_id);
 
 
+       // Skip if this video already exists
+        $existing = new WP_Query([
+            'post_type'      => 'yt-4-wp-video',
+            'post_status'    => 'any',
+            'meta_query'     => [
+                [
+                    'key'     => '_yt_video_id',
+                    'value'   => $video_id,
+                    'compare' => '=',
+                ],
+            ],
+            'fields' => 'ids',
+            'posts_per_page' => 1,
+        ]);
+
+        if ($existing->have_posts()) {
+            continue; // Skip duplicate video
+        }
+        wp_reset_postdata();
+
         // Insert the video post
         $post_id = wp_insert_post([
             'post_title'   => sanitize_text_field($snippet['title']),
