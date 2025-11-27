@@ -1,15 +1,32 @@
 {
   "name": "youtube-for-wordpress-pro",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "wp-scripts build",
-        "start": "wp-scripts start"
+    "start": "wp-scripts start",
+    "copy-swiper-css": "mkdir -p build/css && cp node_modules/swiper/swiper-bundle.min.css build/css/",
+    "build": "wp-scripts build && npm run copy-swiper-css"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "James Welbes",
+  "license": "GPL-2.0-or-later",
+  "description": "Complete YouTube integration toolkit for WordPress with premium features",
+  "dependencies": {
+    "@wordpress/element": "^6.4.0",
+    "@wordpress/scripts": "^30.5.1",
+    "autoprefixer": "^10.4.16",
+    "grunt": "^1.6.1",
+    "grunt-cli": "^1.4.3",
+    "grunt-contrib-compress": "^2.0.0",
+    "postcss-cli": "^10.1.0",
+    "swiper": "^11.1.15",
+    "tailwindcss": "^3.4.0"
+  },
   "devDependencies": {
-    "@wordpress/scripts": "^30.5.1"
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "babel-loader": "^9.2.1",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
   }
 }
