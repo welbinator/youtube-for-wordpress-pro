@@ -19,6 +19,22 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Check if the old free plugin is active and show admin notice
+if (defined('YOUTUBE_FOR_WP_ACTIVE') && defined('YT_FOR_WP_PATH') && YT_FOR_WP_PATH !== plugin_dir_path(__FILE__)) {
+    // The old free plugin is already loaded - show notice and prevent this plugin from loading
+    add_action('admin_notices', function() {
+        ?>
+        <div class="notice notice-error">
+            <p>
+                <strong><?php esc_html_e('YouTube for WordPress Pro cannot be activated', 'yt-for-wp-pro'); ?></strong><br>
+                <?php esc_html_e('Please deactivate the "Toolkit Integration for Youtube" plugin first. YouTube for WordPress Pro includes all the functionality of the free plugin.', 'yt-for-wp-pro'); ?>
+            </p>
+        </div>
+        <?php
+    });
+    return; // Stop loading this plugin
+}
+
 // Define plugin constants for Pro version
 define('YOUTUBEFORWORDPRESS_PRO', __FILE__);
 define('YOUTUBE_FOR_WP_PRO_VERSION', '2.0.0');
