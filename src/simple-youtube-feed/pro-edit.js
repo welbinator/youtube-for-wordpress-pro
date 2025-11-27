@@ -26,20 +26,20 @@ const withProControls = createHigherOrderComponent((BlockEdit) => {
                 <>
                     <BlockEdit {...props} />
                     <InspectorControls>
-                        <PanelBody title="Pro Features">
+                        <PanelBody title="Advanced Features">
                             <TextControl
-                                label="YouTube Channel ID (Pro)"
+                                label="YouTube Channel ID"
                                 value={attributes.channelId}
                                 onChange={(newChannelId) => setAttributes({ channelId: newChannelId })}
                                 help="Leave blank to use the default Channel ID from settings."
                             />
                             <ToggleControl
-                                label="Enable User Search (Pro)"
+                                label="Enable User Search"
                                 checked={attributes.enableSearch}
                                 onChange={(value) => setAttributes({ enableSearch: value })}
                             />
                             <ToggleControl
-                                label="Enable Playlist Filter (Pro)"
+                                label="Enable Playlist Filter"
                                 checked={attributes.enablePlaylistFilter}
                                 onChange={(value) => setAttributes({ enablePlaylistFilter: value })}
                             />

@@ -2,8 +2,8 @@
 /**
  * Plugin Name: YouTube for WordPress Pro
  * Plugin URI: https://jameswelbes.com/youtube-for-wordpress
- * Description: Adds Pro features to YouTube for WordPress.
- * Version: 1.0.6
+ * Description: A complete toolkit for integrating YouTube functionalities into WordPress with premium features.
+ * Version: 2.0.0
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Author: James Welbes
@@ -14,84 +14,161 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-namespace YouTubeForWPPro;
-
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
 }
 
-// Define plugin constants.
-define( 'YOUTUBEFORWORDPRESS_PRO', __FILE__ );
-define('YOUTUBE_FOR_WP_PRO_VERSION', '1.0.6');
+// Define plugin constants for Pro version
+define('YOUTUBEFORWORDPRESS_PRO', __FILE__);
+define('YOUTUBE_FOR_WP_PRO_VERSION', '2.0.0');
 define('YT_FOR_WP_PRO_PATH', plugin_dir_path(__FILE__));
 define('YT_FOR_WP_PRO_URL', plugin_dir_url(__FILE__));
+
+// Define constants for core functionality (formerly free plugin)
+define('YOUTUBE_FOR_WP_VERSION', '2.0.0');
+define('YT_FOR_WP_PATH', plugin_dir_path(__FILE__));
+define('YT_FOR_WP_URL', plugin_dir_url(__FILE__));
+define('YT_FOR_WP_MIN_WP_VERSION', '5.8');
+define('YT_FOR_WP_MIN_PHP_VERSION', '7.4');
+
+// Indicate that core functionality is active (for backward compatibility)
+if (!defined('YOUTUBE_FOR_WP_ACTIVE')) {
+    define('YOUTUBE_FOR_WP_ACTIVE', true);
+}
 
 // Include plugin.php for is_plugin_active().
 if (!function_exists('is_plugin_active')) {
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
 }
 
-if ( file_exists( plugin_dir_path( __FILE__ ) . 'EDD_Licensing.php' ) ) {
-    require plugin_dir_path( __FILE__ ) . 'EDD_Licensing.php';
-}
-
-require_once plugin_dir_path(__FILE__) . 'includes/simple-youtube-feed/pro-save.php';
-require_once plugin_dir_path(__FILE__) . 'includes/youtube-live/pro-save.php';
-require_once plugin_dir_path(__FILE__) . 'includes/pro-settings.php';
-require_once plugin_dir_path(__FILE__) . 'includes/ajax-handlers.php';
-require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
-
 /**
- * Check if the free version is active.
- *
- * @return bool
+ * Check PHP and WordPress versions before activation
  */
-function is_free_version_active() {
-    return defined('YOUTUBE_FOR_WP_ACTIVE') && YOUTUBE_FOR_WP_ACTIVE;
-}
+function yt_for_wp_pro_activation_check() {
+    $errors = [];
+    
+    if (version_compare(PHP_VERSION, YT_FOR_WP_MIN_PHP_VERSION, '<')) {
+        $errors[] = sprintf(
+            esc_html__('YouTube for WordPress Pro requires PHP version %s or higher.', 'yt-for-wp-pro'),
+            esc_html(YT_FOR_WP_MIN_PHP_VERSION)
+        );
+    }
 
+    if (version_compare($GLOBALS['wp_version'], YT_FOR_WP_MIN_WP_VERSION, '<')) {
+        $errors[] = sprintf(
+            esc_html__('YouTube for WordPress Pro requires WordPress version %s or higher.', 'yt-for-wp-pro'),
+            esc_html(YT_FOR_WP_MIN_WP_VERSION)
+        );
+    }
 
-/**
- * Check dependencies on activation.
- */
-function activation_check() {
-    if (!is_free_version_active()) {
+    if ($errors) {
         deactivate_plugins(plugin_basename(__FILE__));
         wp_die(
-            esc_html__(
-                'YouTube for WordPress Pro requires the free version of YouTube for WordPress to be installed and active.',
-                'yt-for-wp-pro'
-            ),
-            esc_html__('Plugin Dependency Error', 'yt-for-wp-pro'),
+            implode('<br>', array_map('esc_html', $errors)),
+            esc_html__('Plugin Activation Error', 'yt-for-wp-pro'),
             ['back_link' => true]
         );
     }
 }
-register_activation_hook(__FILE__, __NAMESPACE__ . '\\activation_check');
+register_activation_hook(__FILE__, 'yt_for_wp_pro_activation_check');
 
 /**
- * Load Pro functionality if the free version is active.
+ * Load text domain for internationalization
  */
-function load_pro_plugin() {
-    if (!is_free_version_active()) {
-        return;
-    }
-
-    // Include required files for Video CPT.
-    require_once YT_FOR_WP_PRO_PATH . 'includes/pro-features/class-video-post-type.php';
-
-
-    // Initialize the Video Post Type
-    \YouTubeForWPPro\VideoCPT\Video_Post_Type::init();
-
-
-    // Initialize Pro features.
-    add_action('plugins_loaded', function () {
-        do_action('yt_for_wp_pro_loaded');
-    });
+function yt_for_wp_pro_load_textdomain() {
+    load_plugin_textdomain('yt-for-wp-pro', false, dirname(plugin_basename(__FILE__)) . '/languages');
 }
-add_action('plugins_loaded', __NAMESPACE__ . '\\load_pro_plugin');
+add_action('init', 'yt_for_wp_pro_load_textdomain');
+
+// Include EDD Licensing
+if (file_exists(plugin_dir_path(__FILE__) . 'EDD_Licensing.php')) {
+    require plugin_dir_path(__FILE__) . 'EDD_Licensing.php';
+}
+
+// Include core functionality (formerly free plugin features)
+require_once YT_FOR_WP_PRO_PATH . 'includes/admin-settings.php';
+require_once YT_FOR_WP_PRO_PATH . 'blocks/simple-youtube-feed/simple-youtube-feed.php';
+require_once YT_FOR_WP_PRO_PATH . 'blocks/youtube-live/youtube-live.php';
+
+// Include Pro features
+require_once YT_FOR_WP_PRO_PATH . 'includes/simple-youtube-feed/pro-save.php';
+require_once YT_FOR_WP_PRO_PATH . 'includes/youtube-live/pro-save.php';
+require_once YT_FOR_WP_PRO_PATH . 'includes/pro-settings.php';
+require_once YT_FOR_WP_PRO_PATH . 'includes/ajax-handlers.php';
+require_once YT_FOR_WP_PRO_PATH . 'includes/functions.php';
+require_once YT_FOR_WP_PRO_PATH . 'includes/pro-features/class-video-post-type.php';
+
+// Include GitHub updater if available
+if (file_exists(YT_FOR_WP_PRO_PATH . 'github-update.php')) {
+    include YT_FOR_WP_PRO_PATH . 'github-update.php';
+}
+
+// Initialize the Video Post Type
+\YouTubeForWPPro\VideoCPT\Video_Post_Type::init();
+
+// Initialize Pro features
+add_action('plugins_loaded', function () {
+    do_action('yt_for_wp_pro_loaded');
+});
+
+// Register core admin menu
+add_action('admin_menu', function() {
+    add_menu_page(
+        __('YT for WP', 'yt-for-wp-pro'),
+        __('YT for WP', 'yt-for-wp-pro'),
+        'manage_options',
+        'youtube-for-wordpress-settings',
+        'YouTubeForWP\Admin\Settings\render_settings_page',
+        'dashicons-video-alt3',
+        20
+    );
+});
+
+// Enqueue core block assets (formerly from free plugin)
+add_action('enqueue_block_assets', function() {
+    $api_key = \YouTubeForWP\Admin\Settings\get_api_key();
+    $channel_id = get_option('yt_for_wp_channel_id');
+    $localize_data = [
+        'channelId' => $channel_id,
+        'apiKey'    => $api_key,
+        'restUrl'   => rest_url('youtube-for-wordpress/v1/'),
+        'nonce'     => wp_create_nonce('wp_rest'),
+    ];
+
+    // Enqueue front-end assets
+    if (!is_admin()) {
+        // Conditionally enqueue Swiper CSS
+        if (!wp_style_is('swiper-css', 'enqueued')) {
+            wp_enqueue_style('swiper-css', 'https://unpkg.com/swiper@8/swiper-bundle.min.css', [], '8.4.7');
+        }
+
+        // Conditionally enqueue Swiper JS
+        if (!wp_script_is('swiper-js', 'enqueued')) {
+            wp_enqueue_script('swiper-js', 'https://unpkg.com/swiper@8/swiper-bundle.min.js', [], '8.4.7', true);
+        }
+
+        // Enqueue plugin script with Swiper dependency
+        wp_enqueue_script(
+            'youtube-for-wordpress-simple-youtube-feed-view',
+            plugins_url('build/simple-youtube-feed/view.js', __FILE__),
+            ['swiper-js'],
+            YOUTUBE_FOR_WP_PRO_VERSION,
+            true
+        );
+        wp_localize_script('youtube-for-wordpress-simple-youtube-feed-view', 'YT_FOR_WP', $localize_data);
+    } else {
+        // Enqueue editor assets
+        wp_enqueue_script(
+            'youtube-for-wordpress-simple-youtube-feed-editor',
+            plugins_url('build/simple-youtube-feed/index.js', __FILE__),
+            ['wp-blocks', 'wp-element', 'wp-editor'],
+            YOUTUBE_FOR_WP_PRO_VERSION,
+            true
+        );
+        wp_localize_script('youtube-for-wordpress-simple-youtube-feed-editor', 'YT_FOR_WP', $localize_data);
+    }
+});
 
 add_action('enqueue_block_editor_assets', function () {
     // Include the asset file generated by the build process
