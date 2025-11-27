@@ -43,10 +43,18 @@ if (!function_exists('is_plugin_active')) {
 }
 
 /**
- * Check PHP and WordPress versions before activation
+ * Check PHP and WordPress versions before activation, and deactivate old free plugin
  */
 function yt_for_wp_pro_activation_check() {
     $errors = [];
+    $notices = [];
+    
+    // Check if the old free plugin is active and deactivate it
+    $old_free_plugin = 'toolkit-integration-for-youtube/youtube-for-wordpress.php';
+    if (is_plugin_active($old_free_plugin)) {
+        deactivate_plugins($old_free_plugin);
+        $notices[] = esc_html__('The free "Toolkit Integration for Youtube" plugin has been automatically deactivated as its functionality is now included in YouTube for WordPress Pro.', 'yt-for-wp-pro');
+    }
     
     if (version_compare(PHP_VERSION, YT_FOR_WP_MIN_PHP_VERSION, '<')) {
         $errors[] = sprintf(
@@ -70,8 +78,27 @@ function yt_for_wp_pro_activation_check() {
             ['back_link' => true]
         );
     }
+
+    // Display notice about deactivated free plugin
+    if ($notices) {
+        set_transient('yt_for_wp_pro_activation_notice', $notices, 30);
+    }
 }
 register_activation_hook(__FILE__, 'yt_for_wp_pro_activation_check');
+
+/**
+ * Display admin notice after activation if old plugin was deactivated
+ */
+function yt_for_wp_pro_activation_notice() {
+    $notices = get_transient('yt_for_wp_pro_activation_notice');
+    if ($notices) {
+        foreach ($notices as $notice) {
+            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html($notice) . '</p></div>';
+        }
+        delete_transient('yt_for_wp_pro_activation_notice');
+    }
+}
+add_action('admin_notices', 'yt_for_wp_pro_activation_notice');
 
 /**
  * Load text domain for internationalization
