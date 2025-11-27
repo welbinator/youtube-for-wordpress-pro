@@ -114,17 +114,42 @@ if (file_exists(plugin_dir_path(__FILE__) . 'EDD_Licensing.php')) {
 }
 
 // Include core functionality (formerly free plugin features)
-require_once YT_FOR_WP_PRO_PATH . 'includes/admin-settings.php';
-require_once YT_FOR_WP_PRO_PATH . 'blocks/simple-youtube-feed/simple-youtube-feed.php';
-require_once YT_FOR_WP_PRO_PATH . 'blocks/youtube-live/youtube-live.php';
+if (file_exists(YT_FOR_WP_PRO_PATH . 'includes/admin-settings.php')) {
+    require_once YT_FOR_WP_PRO_PATH . 'includes/admin-settings.php';
+}
+
+if (file_exists(YT_FOR_WP_PRO_PATH . 'blocks/simple-youtube-feed/simple-youtube-feed.php')) {
+    require_once YT_FOR_WP_PRO_PATH . 'blocks/simple-youtube-feed/simple-youtube-feed.php';
+}
+
+if (file_exists(YT_FOR_WP_PRO_PATH . 'blocks/youtube-live/youtube-live.php')) {
+    require_once YT_FOR_WP_PRO_PATH . 'blocks/youtube-live/youtube-live.php';
+}
 
 // Include Pro features
-require_once YT_FOR_WP_PRO_PATH . 'includes/simple-youtube-feed/pro-save.php';
-require_once YT_FOR_WP_PRO_PATH . 'includes/youtube-live/pro-save.php';
-require_once YT_FOR_WP_PRO_PATH . 'includes/pro-settings.php';
-require_once YT_FOR_WP_PRO_PATH . 'includes/ajax-handlers.php';
-require_once YT_FOR_WP_PRO_PATH . 'includes/functions.php';
-require_once YT_FOR_WP_PRO_PATH . 'includes/pro-features/class-video-post-type.php';
+if (file_exists(YT_FOR_WP_PRO_PATH . 'includes/simple-youtube-feed/pro-save.php')) {
+    require_once YT_FOR_WP_PRO_PATH . 'includes/simple-youtube-feed/pro-save.php';
+}
+
+if (file_exists(YT_FOR_WP_PRO_PATH . 'includes/youtube-live/pro-save.php')) {
+    require_once YT_FOR_WP_PRO_PATH . 'includes/youtube-live/pro-save.php';
+}
+
+if (file_exists(YT_FOR_WP_PRO_PATH . 'includes/pro-settings.php')) {
+    require_once YT_FOR_WP_PRO_PATH . 'includes/pro-settings.php';
+}
+
+if (file_exists(YT_FOR_WP_PRO_PATH . 'includes/ajax-handlers.php')) {
+    require_once YT_FOR_WP_PRO_PATH . 'includes/ajax-handlers.php';
+}
+
+if (file_exists(YT_FOR_WP_PRO_PATH . 'includes/functions.php')) {
+    require_once YT_FOR_WP_PRO_PATH . 'includes/functions.php';
+}
+
+if (file_exists(YT_FOR_WP_PRO_PATH . 'includes/pro-features/class-video-post-type.php')) {
+    require_once YT_FOR_WP_PRO_PATH . 'includes/pro-features/class-video-post-type.php';
+}
 
 // Include GitHub updater if available
 if (file_exists(YT_FOR_WP_PRO_PATH . 'github-update.php')) {
@@ -132,7 +157,9 @@ if (file_exists(YT_FOR_WP_PRO_PATH . 'github-update.php')) {
 }
 
 // Initialize the Video Post Type
-\YouTubeForWPPro\VideoCPT\Video_Post_Type::init();
+if (class_exists('YouTubeForWPPro\VideoCPT\Video_Post_Type')) {
+    \YouTubeForWPPro\VideoCPT\Video_Post_Type::init();
+}
 
 // Initialize Pro features
 add_action('plugins_loaded', function () {
@@ -141,21 +168,27 @@ add_action('plugins_loaded', function () {
 
 // Register core admin menu
 add_action('admin_menu', function() {
-    add_menu_page(
-        __('YT for WP', 'yt-for-wp-pro'),
-        __('YT for WP', 'yt-for-wp-pro'),
-        'manage_options',
-        'youtube-for-wordpress-settings',
-        'YouTubeForWP\Admin\Settings\render_settings_page',
-        'dashicons-video-alt3',
-        20
-    );
+    // Only add menu if the render function exists
+    if (function_exists('YouTubeForWP\Admin\Settings\render_settings_page')) {
+        add_menu_page(
+            __('YT for WP', 'yt-for-wp-pro'),
+            __('YT for WP', 'yt-for-wp-pro'),
+            'manage_options',
+            'youtube-for-wordpress-settings',
+            'YouTubeForWP\Admin\Settings\render_settings_page',
+            'dashicons-video-alt3',
+            20
+        );
+    }
 });
 
 // Enqueue core block assets (formerly from free plugin)
 add_action('enqueue_block_assets', function() {
-    $api_key = \YouTubeForWP\Admin\Settings\get_api_key();
-    $channel_id = get_option('yt_for_wp_channel_id');
+    // Check if the get_api_key function exists
+    $api_key = function_exists('YouTubeForWP\Admin\Settings\get_api_key') 
+        ? \YouTubeForWP\Admin\Settings\get_api_key() 
+        : '';
+    $channel_id = get_option('yt_for_wp_channel_id', '');
     $localize_data = [
         'channelId' => $channel_id,
         'apiKey'    => $api_key,
