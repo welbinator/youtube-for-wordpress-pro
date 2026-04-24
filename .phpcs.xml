@@ -5,16 +5,27 @@
   <!-- Scan these files/dirs -->
   <file>.</file>
 
-  <!-- Exclude these -->
+  <!-- Exclude third-party and structural files -->
   <exclude-pattern>*/vendor/*</exclude-pattern>
   <exclude-pattern>*/node_modules/*</exclude-pattern>
   <exclude-pattern>*/build/*</exclude-pattern>
   <exclude-pattern>*/assets/*</exclude-pattern>
+  <exclude-pattern>*/src/*</exclude-pattern>
+  <exclude-pattern>EDD_SL_Plugin_Updater.php</exclude-pattern>
+  <exclude-pattern>EDD_Licensing.php</exclude-pattern>
+  <exclude-pattern>github-update.php</exclude-pattern>
+  <exclude-pattern>*.js</exclude-pattern>
 
   <!-- Use WordPress Coding Standards -->
   <rule ref="WordPress">
     <!-- Allow short array syntax -->
     <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+    <!-- Allow mixed class+function files (intentional architecture) -->
+    <exclude name="PSR1.Files.SideEffects"/>
+    <!-- Allow non-standard file naming where needed -->
+    <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+    <!-- Allow functions and classes in same file (intentional architecture) -->
+    <exclude name="Universal.Files.SeparateFunctionsFromOO.Mixed"/>
   </rule>
 
   <!-- WordPress minimum version -->
@@ -24,7 +35,7 @@
   <!-- Text domain -->
   <rule ref="WordPress.WP.I18n">
     <properties>
-      <property name="text_domain" type="array" value="youtube-for-wordpress-pro"/>
+      <property name="text_domain" type="array" value="youtube-for-wordpress-pro,yt-for-wp-pro"/>
     </properties>
   </rule>
 </ruleset>

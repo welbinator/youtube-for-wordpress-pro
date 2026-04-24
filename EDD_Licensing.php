@@ -78,13 +78,13 @@ function license_key_settings_field() {
  * @return void
  */
 function register_option() {
-    register_setting(
-        'youtubeforwordpress_pro_license', // Option group
-        'youtubeforwordpress_pro_license_key', // Option name
-        __NAMESPACE__ . '\edd_sanitize_license' // Sanitize callback
-    );
+	register_setting(
+		'youtubeforwordpress_pro_license', // Option group
+		'youtubeforwordpress_pro_license_key', // Option name
+		__NAMESPACE__ . '\edd_sanitize_license' // Sanitize callback
+	);
 }
-add_action('admin_init', __NAMESPACE__ . '\register_option');
+add_action( 'admin_init', __NAMESPACE__ . '\register_option' );
 
 
 /**
