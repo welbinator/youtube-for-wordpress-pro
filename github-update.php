@@ -40,7 +40,7 @@ function check_for_updates( $transient ) {
 	$download_url   = $release['assets'][0]['browser_download_url'];
 
 	// Define the main plugin file once
-	$plugin_file     = __DIR__ . '/youtube-for-wordpress.php';
+	$plugin_file     = __DIR__ . '/youtube-for-wordpress-pro.php';
 	$plugin_slug     = plugin_basename( $plugin_file );
 	$plugin_data     = get_plugin_data( $plugin_file );
 	$current_version = $plugin_data['Version'];
