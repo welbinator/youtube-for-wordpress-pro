@@ -316,11 +316,6 @@ parameters:
 			path: includes/ajax-handlers.php
 
 		-
-			message: "#^Function get_option not found\\.$#"
-			count: 2
-			path: includes/ajax-handlers.php
-
-		-
 			message: "#^Function is_wp_error not found\\.$#"
 			count: 11
 			path: includes/ajax-handlers.php
@@ -417,7 +412,7 @@ parameters:
 
 		-
 			message: "#^Function get_option not found\\.$#"
-			count: 3
+			count: 1
 			path: includes/class-channel-manager.php
 
 		-
@@ -911,6 +906,11 @@ parameters:
 			path: youtube-for-wordpress-pro.php
 
 		-
+			message: "#^Function delete_option not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
 			message: "#^Function delete_transient not found\\.$#"
 			count: 1
 			path: youtube-for-wordpress-pro.php
@@ -937,7 +937,7 @@ parameters:
 
 		-
 			message: "#^Function get_option not found\\.$#"
-			count: 10
+			count: 12
 			path: youtube-for-wordpress-pro.php
 
 		-
@@ -1007,7 +1007,7 @@ parameters:
 
 		-
 			message: "#^Function update_option not found\\.$#"
-			count: 4
+			count: 5
 			path: youtube-for-wordpress-pro.php
 
 		-
