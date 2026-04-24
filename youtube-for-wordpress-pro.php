@@ -357,6 +357,11 @@ add_action(
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			)
 		);
+
+		wp_add_inline_script(
+			'yt-for-wp-pro-video-import',
+			'var ytForWPCreateNonce = ' . wp_json_encode( wp_create_nonce( 'yt-for-wp-create-post-type' ) ) . ';'
+		);
 	}
 );
 

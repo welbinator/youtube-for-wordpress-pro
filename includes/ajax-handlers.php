@@ -6,9 +6,39 @@
  */
 
 add_action(
+	'wp_ajax_yt_for_wp_create_post_type',
+	function () {
+		check_ajax_referer( 'yt-for-wp-create-post-type', '_ajax_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'Permission denied.', 'yt-for-wp-pro' ) );
+		}
+
+		if ( \YouTubeForWPPro\VideoCPT\Video_Post_Type::is_created() ) {
+			wp_send_json_error( __( 'Post type has already been created and cannot be changed.', 'yt-for-wp-pro' ) );
+		}
+
+		$slug = isset( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
+		$name = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+
+		$result = \YouTubeForWPPro\VideoCPT\Video_Post_Type::create( $slug, $name );
+
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( $result->get_error_message() );
+		}
+
+		wp_send_json_success( __( 'Post type created successfully.', 'yt-for-wp-pro' ) );
+	}
+);
+
+add_action(
 	'wp_ajax_yt_for_wp_pro_import_videos',
 	function () {
 		check_ajax_referer( 'yt-for-wp-import-videos', '_ajax_nonce' );
+
+		if ( ! \YouTubeForWPPro\VideoCPT\Video_Post_Type::is_created() ) {
+			wp_send_json_error( __( 'Please create your video post type before importing videos.', 'yt-for-wp-pro' ) );
+		}
 
 		$limit      = intval( $_POST['limit'] ?? 0 );
 		$channel_id = get_option( 'yt_for_wp_channel_id' );
@@ -42,14 +72,16 @@ add_action(
 		}
 
 		// Map playlists to taxonomy terms.
-		$playlist_map = array();
+		$post_type_slug = \YouTubeForWPPro\VideoCPT\Video_Post_Type::get_slug();
+		$taxonomy_slug  = $post_type_slug . '-playlist';
+		$playlist_map   = array();
 		foreach ( $playlists['items'] as $playlist ) {
 			$playlist_name = sanitize_text_field( $playlist['snippet']['title'] );
 			$playlist_id   = sanitize_text_field( $playlist['id'] );
 
-			$term = term_exists( $playlist_name, 'yt-4-wp-playlist' );
+			$term = term_exists( $playlist_name, $taxonomy_slug );
 			if ( ! $term ) {
-				$term = wp_insert_term( $playlist_name, 'yt-4-wp-playlist' );
+				$term = wp_insert_term( $playlist_name, $taxonomy_slug );
 			}
 
 			if ( ! is_wp_error( $term ) ) {
@@ -118,7 +150,7 @@ add_action(
 			// Skip if this video already exists.
 			$existing = new WP_Query(
 				array(
-					'post_type'      => 'yt-4-wp-video',
+					'post_type'      => $post_type_slug,
 					'post_status'    => 'any',
 					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Necessary for video lookup.
 					'meta_query'     => array(
@@ -144,7 +176,7 @@ add_action(
 					'post_title'   => sanitize_text_field( $snippet['title'] ),
 					'post_content' => esc_html( $snippet['description'] ),
 					'post_status'  => 'publish',
-					'post_type'    => 'yt-4-wp-video',
+					'post_type'    => $post_type_slug,
 					'post_date'    => gmdate( 'Y-m-d H:i:s', strtotime( $snippet['publishedAt'] ) ),
 				)
 			);
@@ -188,7 +220,7 @@ add_action(
 
 					foreach ( $playlist_items['items'] as $item ) {
 						if ( $item['snippet']['resourceId']['videoId'] === $video_id ) {
-							wp_set_post_terms( $post_id, array( $term_id ), 'yt-4-wp-playlist', true );
+							wp_set_post_terms( $post_id, array( $term_id ), $taxonomy_slug, true );
 							break;
 						}
 					}
