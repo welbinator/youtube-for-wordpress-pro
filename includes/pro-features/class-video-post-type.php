@@ -101,6 +101,18 @@ class Video_Post_Type {
 			);
 		}
 
+		// Check that the companion taxonomy slug is also available.
+		if ( taxonomy_exists( $slug . '-playlist' ) ) {
+			return new \WP_Error(
+				'taxonomy_slug_exists',
+				sprintf(
+					/* translators: %s: taxonomy slug */
+					__( 'A taxonomy with the slug "%s" already exists. Choose a different post type slug.', 'yt-for-wp-pro' ),
+					$slug . '-playlist'
+				)
+			);
+		}
+
 		// Reserved WordPress slugs.
 		$reserved = array( 'post', 'page', 'attachment', 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset', 'action', 'author', 'order', 'theme' );
 		if ( in_array( $slug, $reserved, true ) ) {

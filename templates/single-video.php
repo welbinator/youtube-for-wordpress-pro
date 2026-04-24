@@ -2,6 +2,9 @@
 /**
  * Single video template.
  *
+ * @public These templates are intentionally public-facing and require no capability gate.
+ *         If login is required site-wide, handle it at the theme level.
+ *
  * @package YouTubeForWordPressPro
  */
 

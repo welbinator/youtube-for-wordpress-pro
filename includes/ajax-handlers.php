@@ -342,7 +342,7 @@ add_action(
 		// This avoids N+1 API calls inside the video insert loop.
 		$video_term_map = array();
 		foreach ( $playlist_map as $pl_id => $term_id ) {
-			$pl_items_url = add_query_arg(
+			$pl_items_url      = add_query_arg(
 				array(
 					'part'       => 'snippet',
 					'playlistId' => $pl_id,
