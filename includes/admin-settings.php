@@ -60,7 +60,7 @@ class API_Key_Handler {
 			if ( false === $key ) {
 				return false;
 			}
-			add_option( self::ENCRYPTION_KEY_OPTION, $key, '', 'no' );
+			add_option( self::ENCRYPTION_KEY_OPTION, $key, '', false );
 		}
 
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- Decoding binary key from storage, not obfuscation.
@@ -192,7 +192,7 @@ class API_Key_Handler {
 			return false;
 		}
 
-		return update_option( self::ENCRYPTED_API_KEY_OPTION, $encrypted, 'no' );
+		return update_option( self::ENCRYPTED_API_KEY_OPTION, $encrypted, false );
 	}
 
 	/**

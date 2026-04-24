@@ -1,0 +1,46 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^While loop condition is always true\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^While loop condition is always true\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Constant YOUTUBEFORWORDPRESSPRO_PLUGIN_LICENSE_PAGE not found\\.$#"
+			count: 3
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Parameter \\#3 \\$callback of function add_settings_field expects callable\\(\\)\\: mixed, 'YouTubeForWPPro…' given\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Parameter \\#3 \\$callback of function add_settings_section expects callable\\(\\)\\: mixed, 'YouTubeForWPPro…' given\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Parameter \\#6 \\$callback of function add_submenu_page expects callable\\(\\)\\: mixed, 'YouTubeForWPPro…' given\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
