@@ -393,6 +393,18 @@ function render_import_videos_page() {
 				</tr>
 				<tr>
 					<th scope="row">
+						<label for="yt_for_wp_playlist"><?php esc_html_e( 'Playlist', 'yt-for-wp-pro' ); ?></label>
+					</th>
+					<td>
+						<select name="yt_for_wp_playlist" id="yt_for_wp_playlist" class="regular-text">
+							<option value=""><?php esc_html_e( 'All Videos', 'yt-for-wp-pro' ); ?></option>
+						</select>
+						<span id="yt-playlist-loading" style="display:none; margin-left:8px;"><?php esc_html_e( 'Loading playlists...', 'yt-for-wp-pro' ); ?></span>
+						<p class="description"><?php esc_html_e( 'Choose a specific playlist or import all videos from the channel.', 'yt-for-wp-pro' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">
 						<label for="yt_for_wp_post_type"><?php esc_html_e( 'Post Type', 'yt-for-wp-pro' ); ?></label>
 					</th>
 					<td>
@@ -431,7 +443,7 @@ function render_import_videos_page() {
 		jQuery(function($) {
 			var postTypes = <?php echo wp_json_encode( $post_types ); ?>;
 
-			// Update info bar when post type changes
+			// Update info bar when post type changes.
 			$('#yt_for_wp_post_type').on('change', function() {
 				var slug = $(this).val();
 				var type = postTypes.find(function(t) { return t.slug === slug; });
@@ -440,6 +452,37 @@ function render_import_videos_page() {
 					$('#yt-selected-type-slug').text(type.slug);
 					$('#yt-selected-type-taxonomy').text(type.slug + '-playlist');
 				}
+			});
+
+			// Fetch playlists when channel changes.
+			function loadPlaylists(channelId) {
+				var $select = $('#yt_for_wp_playlist');
+				var $loading = $('#yt-playlist-loading');
+				$select.prop('disabled', true);
+				$loading.show();
+				$.post(ajaxurl, {
+					action: 'yt_for_wp_get_playlists',
+					channel_id: channelId,
+					_ajax_nonce: ytForWPSettings.nonce
+				}, function(response) {
+					$loading.hide();
+					$select.prop('disabled', false);
+					$select.find('option:not(:first)').remove();
+					if (response.success && response.data.length) {
+						$.each(response.data, function(i, playlist) {
+							$select.append($('<option>', { value: playlist.id, text: playlist.title }));
+						});
+					}
+				});
+			}
+
+			// Load playlists for the initially selected channel.
+			var initialChannel = $('#yt_for_wp_channel').val();
+			if (initialChannel) { loadPlaylists(initialChannel); }
+
+			// Reload when channel changes.
+			$('#yt_for_wp_channel').on('change', function() {
+				loadPlaylists($(this).val());
 			});
 		});
 	</script>

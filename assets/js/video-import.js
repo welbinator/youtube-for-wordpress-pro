@@ -3,9 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (importButton) {
         importButton.addEventListener('click', async () => {
-            const limit = document.getElementById('yt_for_wp_pro_video_import_limit').value || 0;
-            const channelId = document.getElementById('yt_for_wp_channel') ? document.getElementById('yt_for_wp_channel').value : '';
-            const postTypeSlug = document.getElementById('yt_for_wp_post_type') ? document.getElementById('yt_for_wp_post_type').value : '';
+            const limit       = document.getElementById('yt_for_wp_pro_video_import_limit').value || 0;
+            const channelEl   = document.getElementById('yt_for_wp_channel');
+            const postTypeEl  = document.getElementById('yt_for_wp_post_type');
+            const playlistEl  = document.getElementById('yt_for_wp_playlist');
+            const channelId   = channelEl ? channelEl.value : '';
+            const postTypeSlug = postTypeEl ? postTypeEl.value : '';
+            const playlistId  = playlistEl ? playlistEl.value : '';
 
             importButton.disabled = true;
             importButton.textContent = 'Importing...';
@@ -16,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('limit', limit);
                 formData.append('channel_id', channelId);
                 formData.append('post_type_slug', postTypeSlug);
+                formData.append('playlist_id', playlistId);
                 formData.append('_ajax_nonce', ytForWPSettings.nonce);
 
                 const response = await fetch(ajaxurl, {
