@@ -153,11 +153,6 @@ function yt_for_wp_pro_load_textdomain() {
 }
 add_action( 'init', 'yt_for_wp_pro_load_textdomain' );
 
-// Include EDD Licensing.
-if ( file_exists( plugin_dir_path( __FILE__ ) . 'EDD_Licensing.php' ) ) {
-	require plugin_dir_path( __FILE__ ) . 'EDD_Licensing.php';
-}
-
 // Include core functionality (formerly free plugin features).
 if ( file_exists( YT_FOR_WP_PRO_PATH . 'includes/admin-settings.php' ) ) {
 	require_once YT_FOR_WP_PRO_PATH . 'includes/admin-settings.php';
@@ -366,47 +361,6 @@ add_action(
 );
 
 /**
- * Adds the plugin license page to the admin menu.
- *
- * @return void
- */
-function license_page() {
-	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-		error_log( 'license page' );
-	}
-
-	add_settings_section(
-		'youtubeforwordpress_pro_license',
-		__( 'License', 'yt-for-wp-pro' ),
-		'YouTubeForWPPro\EDDLicensing\license_key_settings_section',
-		YOUTUBEFORWORDPRESSPRO_PLUGIN_LICENSE_PAGE
-	);
-
-	add_settings_field(
-		'youtubeforwordpress_pro_license_key',
-		'<label for="youtubeforwordpress_pro_license_key">' . __( 'License Key', 'yt-for-wp-pro' ) . '</label>',
-		'YouTubeForWPPro\EDDLicensing\license_key_settings_field',
-		YOUTUBEFORWORDPRESSPRO_PLUGIN_LICENSE_PAGE,
-		'youtubeforwordpress_pro_license',
-	);
-
-	?>
-		<div class="wrap">
-			<h2><?php esc_html_e( 'License Options', 'yt-for-wp-pro' ); ?></h2>
-			<form method="post" action="options.php">
-	
-			<?php
-			do_settings_sections( YOUTUBEFORWORDPRESSPRO_PLUGIN_LICENSE_PAGE );
-			settings_fields( 'youtubeforwordpress_pro_license' );
-			submit_button();
-			?>
-	
-			</form>
-		<?php
-}
-
-/**
  * Adds Pro-specific admin menu items.
  */
 add_action(
@@ -414,19 +368,11 @@ add_action(
 	function () {
 		add_submenu_page(
 			'youtube-for-wordpress-settings',
-			__( 'License', 'yt-for-wp-pro' ),
-			__( 'License', 'yt-for-wp-pro' ),
-			'manage_options',
-			'youtubeforwordpresspro-license',
-			'license_page'
-		);
-		add_submenu_page(
-			'youtube-for-wordpress-settings',
 			__( 'Import Videos', 'yt-for-wp-pro' ),
 			__( 'Import Videos', 'yt-for-wp-pro' ),
 			'manage_options',
 			'yt-for-wp-import-videos',
-			'YouTubeForWPPro\Settings\render_import_videos_page'
+			'YouTubeForWPPro\\Settings\\render_import_videos_page'
 		);
 	},
 	20
