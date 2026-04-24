@@ -263,28 +263,6 @@ function register_settings() {
 		'yt_for_wp_main_section'
 	);
 
-	// Register Channel ID field.
-	add_settings_field(
-		'yt_for_wp_channel_id',
-		__( 'YouTube Channel ID', 'yt-for-wp-pro' ),
-		function () {
-			if ( ! current_user_can( 'manage_options' ) ) {
-				return;
-			}
-			$channel_id = get_option( 'yt_for_wp_channel_id', '' );
-			?>
-			<input
-				type="text"
-				name="yt_for_wp_channel_id"
-				value="<?php echo esc_attr( $channel_id ); ?>"
-				class="regular-text"
-			/>
-			<?php
-		},
-		'yt-for-wp-settings',
-		'yt_for_wp_main_section'
-	);
-
 	// Register the API key setting.
 	register_setting(
 		'yt_for_wp_settings',
@@ -324,20 +302,7 @@ function register_settings() {
 		)
 	);
 
-	// Register the channel ID setting.
-	register_setting(
-		'yt_for_wp_settings',
-		'yt_for_wp_channel_id',
-		array(
-			'sanitize_callback' => function ( $input ) {
-				if ( ! current_user_can( 'manage_options' ) ) {
-					return get_option( 'yt_for_wp_channel_id' );
-				}
-				return sanitize_text_field( $input );
-			},
-			'show_in_rest'      => false,
-		)
-	);
+	// Channel ID is now managed via the Channels page.
 }
 add_action( 'admin_init', __NAMESPACE__ . '\\register_settings' );
 
