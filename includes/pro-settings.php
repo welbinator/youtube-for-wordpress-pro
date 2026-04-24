@@ -488,3 +488,95 @@ function render_import_videos_page() {
 	</script>
 	<?php
 }
+
+/**
+ * Render the Help page.
+ */
+function render_help_page() {
+	?>
+	<div class="wrap">
+		<h1><?php esc_html_e( 'YouTube for WordPress Pro — Help', 'yt-for-wp-pro' ); ?></h1>
+
+		<h2><?php esc_html_e( 'Post Meta Fields', 'yt-for-wp-pro' ); ?></h2>
+		<p><?php esc_html_e( 'When videos are imported, each video post is saved with the following custom meta fields. You can use these in your theme templates, custom queries, or page builders.', 'yt-for-wp-pro' ); ?></p>
+
+		<table class="widefat fixed striped" style="max-width:800px;">
+			<thead>
+				<tr>
+					<th style="width:220px;"><?php esc_html_e( 'Meta Key', 'yt-for-wp-pro' ); ?></th>
+					<th><?php esc_html_e( 'Description', 'yt-for-wp-pro' ); ?></th>
+					<th><?php esc_html_e( 'Example Value', 'yt-for-wp-pro' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><code>_yt_video_id</code></td>
+					<td><?php esc_html_e( 'The YouTube video ID. Use this to build custom embed URLs or link to the video on YouTube.', 'yt-for-wp-pro' ); ?></td>
+					<td><code>dQw4w9WgXcQ</code></td>
+				</tr>
+				<tr>
+					<td><code>_yt_video_url</code></td>
+					<td><?php esc_html_e( 'The full YouTube embed URL, ready to drop into an iframe src attribute.', 'yt-for-wp-pro' ); ?></td>
+					<td><code>https://www.youtube.com/embed/dQw4w9WgXcQ</code></td>
+				</tr>
+				<tr>
+					<td><code>_yt_published_at</code></td>
+					<td><?php esc_html_e( 'The original publish date from YouTube in ISO 8601 format.', 'yt-for-wp-pro' ); ?></td>
+					<td><code>2009-10-25T07:00:00Z</code></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h3><?php esc_html_e( 'Using meta fields in your theme', 'yt-for-wp-pro' ); ?></h3>
+		<p><?php esc_html_e( 'Retrieve any of these values using standard WordPress functions:', 'yt-for-wp-pro' ); ?></p>
+		<pre style="background:#f6f7f7; padding:16px; border:1px solid #ddd; max-width:800px; overflow-x:auto;">
+		<?php
+		echo esc_html(
+			'// Get the YouTube video ID
+$video_id = get_post_meta( get_the_ID(), \'_yt_video_id\', true );
+
+// Get the embed URL
+$embed_url = get_post_meta( get_the_ID(), \'_yt_video_url\', true );
+
+// Get the original YouTube publish date
+$published = get_post_meta( get_the_ID(), \'_yt_published_at\', true );
+
+// Embed in a template
+echo \'<iframe src="\' . esc_url( $embed_url ) . \'" allowfullscreen></iframe>\';'
+		);
+		?>
+																												</pre>
+
+		<h3><?php esc_html_e( 'Querying videos by post type', 'yt-for-wp-pro' ); ?></h3>
+		<p>
+			<?php
+			$post_types = \YouTubeForWPPro\VideoCPT\Video_Post_Type::get_all();
+			if ( ! empty( $post_types ) ) {
+				echo esc_html__( 'Your registered video post types:', 'yt-for-wp-pro' );
+				echo '<ul style="margin-top:8px;">';
+				foreach ( $post_types as $type ) {
+					echo '<li><strong>' . esc_html( $type['name'] ) . '</strong> — post type slug: <code>' . esc_html( $type['slug'] ) . '</code>, playlist taxonomy: <code>' . esc_html( $type['slug'] . '-playlist' ) . '</code></li>';
+				}
+				echo '</ul>';
+			} else {
+				esc_html_e( 'No post types created yet. Create one under Post Types.', 'yt-for-wp-pro' );
+			}
+			?>
+		</p>
+		<pre style="background:#f6f7f7; padding:16px; border:1px solid #ddd; max-width:800px; overflow-x:auto;">
+		<?php
+		echo esc_html(
+			'// Query all videos of a specific post type
+$videos = new WP_Query( [
+    \'post_type\'      => \'your-post-type-slug\',
+    \'posts_per_page\' => 10,
+    \'orderby\'        => \'date\',
+    \'order\'          => \'DESC\',
+] );'
+		);
+		?>
+																												</pre>
+
+	</div>
+	<?php
+}

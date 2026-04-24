@@ -446,6 +446,14 @@ add_action(
 			'yt-for-wp-import-videos',
 			'YouTubeForWPPro\\Settings\\render_import_videos_page'
 		);
+		add_submenu_page(
+			'youtube-for-wordpress-settings',
+			__( 'Help', 'yt-for-wp-pro' ),
+			__( 'Help', 'yt-for-wp-pro' ),
+			'manage_options',
+			'yt-for-wp-help',
+			'YouTubeForWPPro\\Settings\\render_help_page'
+		);
 	},
 	20
 );
