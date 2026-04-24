@@ -172,8 +172,14 @@ class Channel_Manager {
 				$channel_id = $m[1];
 				$name       = self::fetch_channel_name( $channel_id );
 				return is_wp_error( $name )
-					? array( 'id' => $channel_id, 'name' => $channel_id )
-					: array( 'id' => $channel_id, 'name' => $name );
+					? array(
+						'id'   => $channel_id,
+						'name' => $channel_id,
+					)
+					: array(
+						'id'   => $channel_id,
+						'name' => $name,
+					);
 			}
 
 			// youtube.com/@Handle.
@@ -191,8 +197,14 @@ class Channel_Manager {
 		if ( preg_match( '/^UC[\w-]{22}$/', $input ) ) {
 			$name = self::fetch_channel_name( $input );
 			return is_wp_error( $name )
-				? array( 'id' => $input, 'name' => $input )
-				: array( 'id' => $input, 'name' => $name );
+				? array(
+					'id'   => $input,
+					'name' => $input,
+				)
+				: array(
+					'id'   => $input,
+					'name' => $name,
+				);
 		}
 
 		// Handle (@HandleName or bare handle name).
@@ -222,10 +234,10 @@ class Channel_Manager {
 		// Fallback: search by name.
 		$search_url = add_query_arg(
 			array(
-				'part'  => 'snippet',
-				'type'  => 'channel',
-				'q'     => $handle,
-				'key'   => $api_key,
+				'part' => 'snippet',
+				'type' => 'channel',
+				'q'    => $handle,
+				'key'  => $api_key,
 			),
 			'https://www.googleapis.com/youtube/v3/search'
 		);
