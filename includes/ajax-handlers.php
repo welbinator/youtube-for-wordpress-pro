@@ -276,7 +276,8 @@ add_action(
 				array(
 					'part'       => 'snippet',
 					'playlistId' => $playlist_id,
-					'maxResults' => min( $limit ? $limit : 50, 50 ),
+					// Fetch more than the limit to account for unavailable/private videos.
+					'maxResults' => 50,
 					'key'        => $api_key,
 				),
 				'https://www.googleapis.com/youtube/v3/playlistItems'
@@ -341,7 +342,13 @@ add_action(
 			wp_send_json_error( __( 'No video details found.', 'yt-for-wp-pro' ) );
 		}
 
+		$imported = 0;
+		$skipped  = 0;
 		foreach ( $details['items'] as $video ) {
+			// Stop once we've imported enough new videos.
+			if ( $limit > 0 && $imported >= $limit ) {
+				break;
+			}
 			$video_id = $video['id'];
 			$snippet  = $video['snippet'] ?? null;
 
@@ -370,6 +377,7 @@ add_action(
 			);
 
 			if ( $existing->have_posts() ) {
+				++$skipped;
 				continue; // Skip duplicate video.
 			}
 			wp_reset_postdata();
@@ -386,6 +394,7 @@ add_action(
 			);
 
 			if ( $post_id && ! is_wp_error( $post_id ) ) {
+				++$imported;
 				// Set featured image (video thumbnail).
 				$thumbnail_url = $snippet['thumbnails']['high']['url'];
 				if ( function_exists( 'yt_for_wp_set_post_thumbnail_from_url' ) ) {
@@ -434,6 +443,30 @@ add_action(
 			}
 		}
 
-		wp_send_json_success( __( 'Videos imported successfully.', 'yt-for-wp-pro' ) );
+		if ( 0 === $imported && $skipped > 0 ) {
+			wp_send_json_success(
+				sprintf(
+					/* translators: %d: number of skipped videos */
+					__( 'No new videos imported. %d video(s) were already in your library.', 'yt-for-wp-pro' ),
+					$skipped
+				)
+			);
+		}
+
+		$message = sprintf(
+			/* translators: %d: number of imported videos */
+			__( '%d video(s) imported successfully.', 'yt-for-wp-pro' ),
+			$imported
+		);
+
+		if ( $skipped > 0 ) {
+			$message .= ' ' . sprintf(
+				/* translators: %d: number of skipped videos */
+				__( '%d duplicate(s) skipped.', 'yt-for-wp-pro' ),
+				$skipped
+			);
+		}
+
+		wp_send_json_success( $message );
 	}
 );
