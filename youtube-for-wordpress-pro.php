@@ -418,7 +418,7 @@ add_action(
 			__( 'License', 'yt-for-wp-pro' ),
 			'manage_options',
 			'youtubeforwordpresspro-license',
-			'YouTubeForWPPro\license_page'
+			'license_page'
 		);
 		add_submenu_page(
 			'youtube-for-wordpress-settings',
