@@ -13,9 +13,6 @@ parameters:
   level: 5
   bootstrapFiles:
     - vendor/szepeviktor/phpstan-wordpress/bootstrap.php
-  scanDirectories:
-    - /var/www/html/wp-includes
-    - /var/www/html/wp-admin/includes
   dynamicConstantNames:
     - WP_DEBUG
     - YOUTUBEFORWORDPRESSPRO_PLUGIN_LICENSE_PAGE
