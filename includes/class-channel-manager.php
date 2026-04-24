@@ -107,9 +107,7 @@ class Channel_Manager {
 	 * @return string|\WP_Error
 	 */
 	public static function fetch_channel_name( string $channel_id ) {
-		$api_key = function_exists( 'YouTubeForWP\Admin\Settings\get_api_key' )
-			? \YouTubeForWP\Admin\Settings\get_api_key()
-			: get_option( 'yt_for_wp_api_key', '' );
+		$api_key = \YouTubeForWP\Admin\Settings\get_api_key();
 
 		if ( ! $api_key ) {
 			return new \WP_Error( 'no_api_key', __( 'No API key configured.', 'yt-for-wp-pro' ) );
@@ -154,9 +152,7 @@ class Channel_Manager {
 	public static function resolve_url( string $input ) {
 		$input = trim( $input );
 
-		$api_key = function_exists( 'YouTubeForWP\Admin\Settings\get_api_key' )
-			? \YouTubeForWP\Admin\Settings\get_api_key()
-			: get_option( 'yt_for_wp_api_key', '' );
+		$api_key = \YouTubeForWP\Admin\Settings\get_api_key();
 
 		if ( ! $api_key ) {
 			return new \WP_Error( 'no_api_key', __( 'Please configure your YouTube API key in Settings before adding channels.', 'yt-for-wp-pro' ) );

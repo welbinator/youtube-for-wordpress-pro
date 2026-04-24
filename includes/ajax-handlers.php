@@ -19,9 +19,7 @@ add_action(
 			wp_send_json_error( __( 'Channel ID is required.', 'yt-for-wp-pro' ) );
 		}
 
-		$api_key = function_exists( 'YouTubeForWP\Admin\Settings\get_api_key' )
-			? \YouTubeForWP\Admin\Settings\get_api_key()
-			: get_option( 'yt_for_wp_api_key', '' );
+		$api_key = \YouTubeForWP\Admin\Settings\get_api_key();
 
 		if ( ! $api_key ) {
 			wp_send_json_error( __( 'API Key not configured.', 'yt-for-wp-pro' ) );
@@ -223,9 +221,7 @@ add_action(
 			wp_send_json_error( __( 'Selected post type not found.', 'yt-for-wp-pro' ) );
 		}
 
-		$api_key = function_exists( 'YouTubeForWP\Admin\Settings\get_api_key' )
-			? \YouTubeForWP\Admin\Settings\get_api_key()
-			: get_option( 'yt_for_wp_api_key', '' );
+		$api_key = \YouTubeForWP\Admin\Settings\get_api_key();
 
 		if ( ! $api_key ) {
 			wp_send_json_error( __( 'API Key not configured.', 'yt-for-wp-pro' ) );

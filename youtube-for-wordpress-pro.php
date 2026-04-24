@@ -239,6 +239,14 @@ add_action(
 			}
 			update_option( 'yt_for_wp_channels_migrated', true );
 		}
+
+		// Remove legacy plaintext API key from options table.
+		// The key is now stored encrypted via admin-settings.php. The old plaintext
+		// option should not exist alongside the encrypted version.
+		if ( get_option( 'yt_for_wp_api_key' ) && ! get_option( 'yt_for_wp_api_key_cleaned' ) ) {
+			delete_option( 'yt_for_wp_api_key' );
+			update_option( 'yt_for_wp_api_key_cleaned', true );
+		}
 	}
 );
 
