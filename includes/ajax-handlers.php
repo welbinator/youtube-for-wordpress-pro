@@ -5,47 +5,161 @@
  * @package YouTubeForWordPressPro
  */
 
+// Add channel.
 add_action(
-	'wp_ajax_yt_for_wp_create_post_type',
+	'wp_ajax_yt_for_wp_add_channel',
 	function () {
-		check_ajax_referer( 'yt-for-wp-create-post-type', '_ajax_nonce' );
+		check_ajax_referer( 'yt-for-wp-settings', '_ajax_nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( __( 'Permission denied.', 'yt-for-wp-pro' ) );
 		}
 
-		if ( \YouTubeForWPPro\VideoCPT\Video_Post_Type::is_created() ) {
-			wp_send_json_error( __( 'Post type has already been created and cannot be changed.', 'yt-for-wp-pro' ) );
+		$channel_id = isset( $_POST['channel_id'] ) ? sanitize_text_field( wp_unslash( $_POST['channel_id'] ) ) : '';
+		$result     = \YouTubeForWPPro\Channels\Channel_Manager::add( $channel_id );
+
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( $result->get_error_message() );
 		}
 
-		$slug = isset( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
-		$name = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		// Return the updated channel list.
+		wp_send_json_success( \YouTubeForWPPro\Channels\Channel_Manager::get_all() );
+	}
+);
 
+// Remove channel.
+add_action(
+	'wp_ajax_yt_for_wp_remove_channel',
+	function () {
+		check_ajax_referer( 'yt-for-wp-settings', '_ajax_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'Permission denied.', 'yt-for-wp-pro' ) );
+		}
+
+		$channel_id = isset( $_POST['channel_id'] ) ? sanitize_text_field( wp_unslash( $_POST['channel_id'] ) ) : '';
+		\YouTubeForWPPro\Channels\Channel_Manager::remove( $channel_id );
+
+		wp_send_json_success( \YouTubeForWPPro\Channels\Channel_Manager::get_all() );
+	}
+);
+
+// Update channel name.
+add_action(
+	'wp_ajax_yt_for_wp_update_channel_name',
+	function () {
+		check_ajax_referer( 'yt-for-wp-settings', '_ajax_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'Permission denied.', 'yt-for-wp-pro' ) );
+		}
+
+		$channel_id = isset( $_POST['channel_id'] ) ? sanitize_text_field( wp_unslash( $_POST['channel_id'] ) ) : '';
+		$name       = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$result     = \YouTubeForWPPro\Channels\Channel_Manager::update_name( $channel_id, $name );
+
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( $result->get_error_message() );
+		}
+
+		wp_send_json_success( \YouTubeForWPPro\Channels\Channel_Manager::get_all() );
+	}
+);
+
+// Add post type.
+add_action(
+	'wp_ajax_yt_for_wp_add_post_type',
+	function () {
+		check_ajax_referer( 'yt-for-wp-settings', '_ajax_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'Permission denied.', 'yt-for-wp-pro' ) );
+		}
+
+		$slug   = isset( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
+		$name   = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$result = \YouTubeForWPPro\VideoCPT\Video_Post_Type::create( $slug, $name );
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( $result->get_error_message() );
 		}
 
-		wp_send_json_success( __( 'Post type created successfully.', 'yt-for-wp-pro' ) );
+		wp_send_json_success( \YouTubeForWPPro\VideoCPT\Video_Post_Type::get_all() );
 	}
 );
 
+// Update post type name.
+add_action(
+	'wp_ajax_yt_for_wp_update_post_type_name',
+	function () {
+		check_ajax_referer( 'yt-for-wp-settings', '_ajax_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'Permission denied.', 'yt-for-wp-pro' ) );
+		}
+
+		$slug   = isset( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
+		$name   = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$result = \YouTubeForWPPro\VideoCPT\Video_Post_Type::update_name( $slug, $name );
+
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( $result->get_error_message() );
+		}
+
+		wp_send_json_success( \YouTubeForWPPro\VideoCPT\Video_Post_Type::get_all() );
+	}
+);
+
+// Import videos.
 add_action(
 	'wp_ajax_yt_for_wp_pro_import_videos',
 	function () {
-		check_ajax_referer( 'yt-for-wp-import-videos', '_ajax_nonce' );
+		check_ajax_referer( 'yt-for-wp-settings', '_ajax_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'Permission denied.', 'yt-for-wp-pro' ) );
+		}
 
 		if ( ! \YouTubeForWPPro\VideoCPT\Video_Post_Type::is_created() ) {
 			wp_send_json_error( __( 'Please create your video post type before importing videos.', 'yt-for-wp-pro' ) );
 		}
 
-		$limit      = intval( $_POST['limit'] ?? 0 );
-		$channel_id = get_option( 'yt_for_wp_channel_id' );
-		$api_key    = get_option( 'yt_for_wp_api_key' );
+		$limit          = isset( $_POST['limit'] ) ? intval( $_POST['limit'] ) : 0;
+		$channel_id     = isset( $_POST['channel_id'] ) ? sanitize_text_field( wp_unslash( $_POST['channel_id'] ) ) : '';
+		$post_type_slug = isset( $_POST['post_type_slug'] ) ? sanitize_key( wp_unslash( $_POST['post_type_slug'] ) ) : '';
 
-		if ( ! $channel_id || ! $api_key ) {
-			wp_send_json_error( __( 'API Key or Channel ID not configured.', 'yt-for-wp-pro' ) );
+		// Validate channel exists.
+		$channels      = \YouTubeForWPPro\Channels\Channel_Manager::get_all();
+		$channel_found = false;
+		foreach ( $channels as $ch ) {
+			if ( $ch['id'] === $channel_id ) {
+				$channel_found = true;
+				break;
+			}
+		}
+		if ( ! $channel_found ) {
+			wp_send_json_error( __( 'Selected channel not found.', 'yt-for-wp-pro' ) );
+		}
+
+		// Validate post type exists.
+		$post_types = \YouTubeForWPPro\VideoCPT\Video_Post_Type::get_all();
+		$pt_found   = false;
+		foreach ( $post_types as $pt ) {
+			if ( $pt['slug'] === $post_type_slug ) {
+				$pt_found = true;
+				break;
+			}
+		}
+		if ( ! $pt_found ) {
+			wp_send_json_error( __( 'Selected post type not found.', 'yt-for-wp-pro' ) );
+		}
+
+		$api_key = function_exists( 'YouTubeForWP\Admin\Settings\get_api_key' )
+			? \YouTubeForWP\Admin\Settings\get_api_key()
+			: get_option( 'yt_for_wp_api_key', '' );
+
+		if ( ! $api_key ) {
+			wp_send_json_error( __( 'API Key not configured.', 'yt-for-wp-pro' ) );
 		}
 
 		// Fetch playlists for the channel.
@@ -72,9 +186,8 @@ add_action(
 		}
 
 		// Map playlists to taxonomy terms.
-		$post_type_slug = \YouTubeForWPPro\VideoCPT\Video_Post_Type::get_slug();
-		$taxonomy_slug  = $post_type_slug . '-playlist';
-		$playlist_map   = array();
+		$taxonomy_slug = $post_type_slug . '-playlist';
+		$playlist_map  = array();
 		foreach ( $playlists['items'] as $playlist ) {
 			$playlist_name = sanitize_text_field( $playlist['snippet']['title'] );
 			$playlist_id   = sanitize_text_field( $playlist['id'] );
@@ -115,7 +228,12 @@ add_action(
 		}
 
 		// Get full details for each video.
-		$video_ids          = array_map( fn( $video ) => $video['id']['videoId'], $videos['items'] );
+		$video_ids          = array_map(
+			function ( $video ) {
+				return $video['id']['videoId'];
+			},
+			$videos['items']
+		);
 		$videos_details_url = add_query_arg(
 			array(
 				'part' => 'snippet',
@@ -148,7 +266,7 @@ add_action(
 			$video_url = sprintf( 'https://www.youtube.com/embed/%s', $video_id );
 
 			// Skip if this video already exists.
-			$existing = new WP_Query(
+			$existing = new \WP_Query(
 				array(
 					'post_type'      => $post_type_slug,
 					'post_status'    => 'any',
@@ -174,7 +292,7 @@ add_action(
 			$post_id = wp_insert_post(
 				array(
 					'post_title'   => sanitize_text_field( $snippet['title'] ),
-					'post_content' => esc_html( $snippet['description'] ),
+					'post_content' => wp_kses_post( $snippet['description'] ),
 					'post_status'  => 'publish',
 					'post_type'    => $post_type_slug,
 					'post_date'    => gmdate( 'Y-m-d H:i:s', strtotime( $snippet['publishedAt'] ) ),
@@ -184,7 +302,9 @@ add_action(
 			if ( $post_id && ! is_wp_error( $post_id ) ) {
 				// Set featured image (video thumbnail).
 				$thumbnail_url = $snippet['thumbnails']['high']['url'];
-				yt_for_wp_set_post_thumbnail_from_url( $post_id, $thumbnail_url );
+				if ( function_exists( 'yt_for_wp_set_post_thumbnail_from_url' ) ) {
+					yt_for_wp_set_post_thumbnail_from_url( $post_id, $thumbnail_url );
+				}
 
 				// Add published date as custom field.
 				update_post_meta( $post_id, '_yt_published_at', sanitize_text_field( $snippet['publishedAt'] ) );
@@ -210,7 +330,7 @@ add_action(
 					$playlist_items_response = wp_remote_get( $playlist_items_url );
 
 					if ( is_wp_error( $playlist_items_response ) ) {
-							continue;
+						continue;
 					}
 
 					$playlist_items = json_decode( wp_remote_retrieve_body( $playlist_items_response ), true );

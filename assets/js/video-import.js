@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (importButton) {
         importButton.addEventListener('click', async () => {
             const limit = document.getElementById('yt_for_wp_pro_video_import_limit').value || 0;
+            const channelId = document.getElementById('yt_for_wp_channel') ? document.getElementById('yt_for_wp_channel').value : '';
+            const postTypeSlug = document.getElementById('yt_for_wp_post_type') ? document.getElementById('yt_for_wp_post_type').value : '';
 
             importButton.disabled = true;
             importButton.textContent = 'Importing...';
@@ -12,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formData = new FormData();
                 formData.append('action', 'yt_for_wp_pro_import_videos');
                 formData.append('limit', limit);
-                formData.append('_ajax_nonce', ytForWPPro.nonce);
+                formData.append('channel_id', channelId);
+                formData.append('post_type_slug', postTypeSlug);
+                formData.append('_ajax_nonce', ytForWPSettings.nonce);
 
                 const response = await fetch(ajaxurl, {
                     method: 'POST',
@@ -25,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Videos imported successfully!');
                 } else {
                     console.error(result.data);
-                    alert('An error occurred during the import process.');
+                    alert('An error occurred during the import process: ' + result.data);
                 }
             } catch (error) {
                 console.error(error);

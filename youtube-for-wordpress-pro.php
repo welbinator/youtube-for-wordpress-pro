@@ -191,10 +191,56 @@ if ( file_exists( YT_FOR_WP_PRO_PATH . 'includes/pro-features/class-video-post-t
 	require_once YT_FOR_WP_PRO_PATH . 'includes/pro-features/class-video-post-type.php';
 }
 
+if ( file_exists( YT_FOR_WP_PRO_PATH . 'includes/class-channel-manager.php' ) ) {
+	require_once YT_FOR_WP_PRO_PATH . 'includes/class-channel-manager.php';
+}
+
 // Include GitHub updater if available.
 if ( file_exists( YT_FOR_WP_PRO_PATH . 'github-update.php' ) ) {
 	include YT_FOR_WP_PRO_PATH . 'github-update.php';
 }
+
+// Migration from old single-item options to arrays.
+add_action(
+	'admin_init',
+	function () {
+		// Migrate single post type to array.
+		if ( get_option( 'yt_for_wp_post_type_created' ) && ! get_option( 'yt_for_wp_post_types_migrated' ) ) {
+			$slug  = get_option( 'yt_for_wp_post_type_slug', 'yt-4-wp-video' );
+			$name  = get_option( 'yt_for_wp_post_type_name', 'Video' );
+			$types = get_option( 'yt_for_wp_post_types', array() );
+			if ( empty( $types ) ) {
+				update_option(
+					'yt_for_wp_post_types',
+					array(
+						array(
+							'slug' => $slug,
+							'name' => $name,
+						),
+					)
+				);
+			}
+			update_option( 'yt_for_wp_post_types_migrated', true );
+		}
+		// Migrate single channel to array.
+		if ( get_option( 'yt_for_wp_channel_id' ) && ! get_option( 'yt_for_wp_channels_migrated' ) ) {
+			$channel_id = get_option( 'yt_for_wp_channel_id' );
+			$channels   = get_option( 'yt_for_wp_channels', array() );
+			if ( empty( $channels ) ) {
+				update_option(
+					'yt_for_wp_channels',
+					array(
+						array(
+							'id'   => $channel_id,
+							'name' => 'Channel',
+						),
+					)
+				);
+			}
+			update_option( 'yt_for_wp_channels_migrated', true );
+		}
+	}
+);
 
 // Initialize the Video Post Type.
 if ( class_exists( 'YouTubeForWPPro\VideoCPT\Video_Post_Type' ) ) {
@@ -336,8 +382,8 @@ add_action(
 add_action(
 	'admin_enqueue_scripts',
 	function ( $hook_suffix ) {
-		// Only enqueue on the Import Videos page.
-		if ( 'yt-for-wp_page_yt-for-wp-import-videos' !== $hook_suffix ) {
+		// Enqueue on all plugin pages.
+		if ( false === strpos( $hook_suffix, 'yt-for-wp' ) ) {
 			return;
 		}
 
@@ -349,18 +395,21 @@ add_action(
 			true
 		);
 
-		wp_localize_script(
-			'yt-for-wp-pro-video-import',
-			'ytForWPPro',
-			array(
-				'nonce'   => wp_create_nonce( 'yt-for-wp-import-videos' ),
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			)
-		);
-
 		wp_add_inline_script(
 			'yt-for-wp-pro-video-import',
-			'var ytForWPCreateNonce = ' . wp_json_encode( wp_create_nonce( 'yt-for-wp-create-post-type' ) ) . ';'
+			'var ytForWPSettings = ' . wp_json_encode(
+				array(
+					'nonce'     => wp_create_nonce( 'yt-for-wp-settings' ),
+					'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
+					'postTypes' => class_exists( 'YouTubeForWPPro\VideoCPT\Video_Post_Type' )
+						? \YouTubeForWPPro\VideoCPT\Video_Post_Type::get_all()
+						: array(),
+					'channels'  => class_exists( 'YouTubeForWPPro\Channels\Channel_Manager' )
+						? \YouTubeForWPPro\Channels\Channel_Manager::get_all()
+						: array(),
+				)
+			) . ';',
+			'before'
 		);
 	}
 );
@@ -371,6 +420,24 @@ add_action(
 add_action(
 	'admin_menu',
 	function () {
+		add_submenu_page(
+			'youtube-for-wordpress-settings',
+			__( 'Channels', 'yt-for-wp-pro' ),
+			__( 'Channels', 'yt-for-wp-pro' ),
+			'manage_options',
+			'yt-for-wp-channels',
+			'YouTubeForWPPro\\Settings\\render_channels_page'
+		);
+
+		add_submenu_page(
+			'youtube-for-wordpress-settings',
+			__( 'Post Types', 'yt-for-wp-pro' ),
+			__( 'Post Types', 'yt-for-wp-pro' ),
+			'manage_options',
+			'yt-for-wp-post-types',
+			'YouTubeForWPPro\\Settings\\render_post_types_page'
+		);
+
 		add_submenu_page(
 			'youtube-for-wordpress-settings',
 			__( 'Import Videos', 'yt-for-wp-pro' ),
