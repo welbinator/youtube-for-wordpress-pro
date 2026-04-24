@@ -63,8 +63,8 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          # Only scan PHP dependencies (composer.json), not npm dev build tools
-          args: --severity-threshold=high --file=composer.json
+          # --severity-threshold=high, exclude npm dev build tools from scan
+          args: --severity-threshold=high --exclude=package.json,package-lock.json
 
   deepsource:
     name: DeepSource
