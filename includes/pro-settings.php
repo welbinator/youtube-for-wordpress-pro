@@ -111,9 +111,22 @@ function render_import_videos_page() {
 	}
 
 	// Post type is created, show the import form.
+	$pt_slug = \YouTubeForWPPro\VideoCPT\Video_Post_Type::get_slug();
+	$pt_name = \YouTubeForWPPro\VideoCPT\Video_Post_Type::get_name();
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Import Videos', 'yt-for-wp-pro' ); ?></h1>
+
+		<div style="background:#fff; border:1px solid #c3c4c7; padding:12px 16px; margin-bottom:20px; display:inline-block;">
+			<strong><?php esc_html_e( 'Video Post Type:', 'yt-for-wp-pro' ); ?></strong>
+			<?php echo esc_html( $pt_name ); ?>
+			&nbsp;&nbsp;
+			<strong><?php esc_html_e( 'Slug:', 'yt-for-wp-pro' ); ?></strong>
+			<code><?php echo esc_html( $pt_slug ); ?></code>
+			&nbsp;&nbsp;
+			<strong><?php esc_html_e( 'Taxonomy:', 'yt-for-wp-pro' ); ?></strong>
+			<code><?php echo esc_html( $pt_slug . '-playlist' ); ?></code>
+		</div>
 		<form method="post" id="yt-for-wp-import-form">
 			<?php wp_nonce_field( 'yt-for-wp-import-videos', '_yt_for_wp_nonce' ); ?>
 
