@@ -1,0 +1,1061 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to method get_param\\(\\) on an unknown class WP_REST_Request\\.$#"
+			count: 4
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 2
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 8
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function get_block_wrapper_attributes not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 2
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function get_site_url not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function get_transient not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function is_wp_error not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function plugin_dir_path not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function register_block_type_from_metadata not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function register_rest_route not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function rest_ensure_response not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function rest_url not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function set_transient not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function wp_create_nonce not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function wp_json_encode not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function wp_localize_script not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function wp_remote_get not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function wp_remote_retrieve_body not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Instantiated class WP_Error not found\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Parameter \\$request of anonymous function has invalid type WP_REST_Request\\.$#"
+			count: 1
+			path: blocks/simple-youtube-feed/simple-youtube-feed.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: blocks/youtube-live/youtube-live.php
+
+		-
+			message: "#^Function plugin_dir_path not found\\.$#"
+			count: 1
+			path: blocks/youtube-live/youtube-live.php
+
+		-
+			message: "#^Function register_block_type_from_metadata not found\\.$#"
+			count: 1
+			path: blocks/youtube-live/youtube-live.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 13
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function add_option not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 2
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function add_settings_error not found\\.$#"
+			count: 2
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function add_settings_field not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function add_settings_section not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 6
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function delete_option not found\\.$#"
+			count: 2
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function do_settings_sections not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 2
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 3
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function get_site_url not found\\.$#"
+			count: 2
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function is_wp_error not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function register_setting not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function settings_errors not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function settings_fields not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function submit_button not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function update_option not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function wp_die not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function wp_json_encode not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function wp_remote_get not found\\.$#"
+			count: 2
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function wp_remote_retrieve_body not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Call to method have_posts\\(\\) on an unknown class WP_Query\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Cannot call method get_error_message\\(\\) on array\\|WP_Error\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Cannot call method get_error_message\\(\\) on bool\\|WP_Error\\.$#"
+			count: 3
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 19
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 7
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 6
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function check_ajax_referer not found\\.$#"
+			count: 7
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function current_user_can not found\\.$#"
+			count: 7
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function esc_url_raw not found\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 2
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function is_wp_error not found\\.$#"
+			count: 11
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 3
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 15
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function term_exists not found\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function update_option not found\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function update_post_meta not found\\.$#"
+			count: 3
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function wp_insert_post not found\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function wp_insert_term not found\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function wp_kses_post not found\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function wp_remote_get not found\\.$#"
+			count: 5
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function wp_remote_retrieve_body not found\\.$#"
+			count: 5
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function wp_reset_postdata not found\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function wp_send_json_error not found\\.$#"
+			count: 24
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function wp_send_json_success not found\\.$#"
+			count: 9
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function wp_set_post_terms not found\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function wp_unslash not found\\.$#"
+			count: 12
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Instantiated class WP_Query not found\\.$#"
+			count: 1
+			path: includes/ajax-handlers.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 8
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Function add_query_arg not found\\.$#"
+			count: 3
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 3
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Function is_wp_error not found\\.$#"
+			count: 6
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 8
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Function update_option not found\\.$#"
+			count: 3
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Function wp_parse_url not found\\.$#"
+			count: 1
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Function wp_remote_get not found\\.$#"
+			count: 3
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Function wp_remote_retrieve_body not found\\.$#"
+			count: 3
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Instantiated class WP_Error not found\\.$#"
+			count: 8
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Method YouTubeForWPPro\\\\Channels\\\\Channel_Manager\\:\\:add\\(\\) has invalid return type WP_Error\\.$#"
+			count: 1
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Method YouTubeForWPPro\\\\Channels\\\\Channel_Manager\\:\\:fetch_channel_name\\(\\) has invalid return type WP_Error\\.$#"
+			count: 1
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Method YouTubeForWPPro\\\\Channels\\\\Channel_Manager\\:\\:resolve_url\\(\\) has invalid return type WP_Error\\.$#"
+			count: 1
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Method YouTubeForWPPro\\\\Channels\\\\Channel_Manager\\:\\:update_name\\(\\) has invalid return type WP_Error\\.$#"
+			count: 1
+			path: includes/class-channel-manager.php
+
+		-
+			message: "#^Function WP_Filesystem not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
+			message: "#^Function is_wp_error not found\\.$#"
+			count: 2
+			path: includes/functions.php
+
+		-
+			message: "#^Function sanitize_file_name not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
+			message: "#^Function set_post_thumbnail not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
+			message: "#^Function wp_check_filetype not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
+			message: "#^Function wp_generate_attachment_metadata not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
+			message: "#^Function wp_insert_attachment not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
+			message: "#^Function wp_parse_url not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
+			message: "#^Function wp_remote_get not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
+			message: "#^Function wp_update_attachment_metadata not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
+			message: "#^Function wp_upload_dir not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 27
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 2
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Function flush_rewrite_rules not found\\.$#"
+			count: 1
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 1
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Function get_post_types not found\\.$#"
+			count: 1
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Function register_post_type not found\\.$#"
+			count: 1
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Function register_taxonomy not found\\.$#"
+			count: 1
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Function sanitize_key not found\\.$#"
+			count: 5
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Function sanitize_text_field not found\\.$#"
+			count: 4
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Function update_option not found\\.$#"
+			count: 2
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Instantiated class WP_Error not found\\.$#"
+			count: 7
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Method YouTubeForWPPro\\\\VideoCPT\\\\Video_Post_Type\\:\\:create\\(\\) has invalid return type WP_Error\\.$#"
+			count: 1
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Method YouTubeForWPPro\\\\VideoCPT\\\\Video_Post_Type\\:\\:update_name\\(\\) has invalid return type WP_Error\\.$#"
+			count: 1
+			path: includes/pro-features/class-video-post-type.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 13
+			path: includes/pro-settings.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 2
+			path: includes/pro-settings.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 6
+			path: includes/pro-settings.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 16
+			path: includes/pro-settings.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 1
+			path: includes/pro-settings.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 56
+			path: includes/pro-settings.php
+
+		-
+			message: "#^Function esc_js not found\\.$#"
+			count: 11
+			path: includes/pro-settings.php
+
+		-
+			message: "#^Function wp_json_encode not found\\.$#"
+			count: 1
+			path: includes/pro-settings.php
+
+		-
+			message: "#^Function wp_kses_post not found\\.$#"
+			count: 2
+			path: includes/pro-settings.php
+
+		-
+			message: "#^Function add_filter not found\\.$#"
+			count: 1
+			path: includes/simple-youtube-feed/pro-save.php
+
+		-
+			message: "#^Function add_filter not found\\.$#"
+			count: 1
+			path: includes/youtube-live/pro-save.php
+
+		-
+			message: "#^Function apply_filters not found\\.$#"
+			count: 1
+			path: templates/single-video.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 2
+			path: templates/single-video.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 2
+			path: templates/single-video.php
+
+		-
+			message: "#^Function get_footer not found\\.$#"
+			count: 1
+			path: templates/single-video.php
+
+		-
+			message: "#^Function get_header not found\\.$#"
+			count: 1
+			path: templates/single-video.php
+
+		-
+			message: "#^Function get_post_meta not found\\.$#"
+			count: 2
+			path: templates/single-video.php
+
+		-
+			message: "#^Function get_term_link not found\\.$#"
+			count: 1
+			path: templates/single-video.php
+
+		-
+			message: "#^Function get_the_ID not found\\.$#"
+			count: 4
+			path: templates/single-video.php
+
+		-
+			message: "#^Function get_the_content not found\\.$#"
+			count: 1
+			path: templates/single-video.php
+
+		-
+			message: "#^Function get_the_post_thumbnail_url not found\\.$#"
+			count: 1
+			path: templates/single-video.php
+
+		-
+			message: "#^Function the_title not found\\.$#"
+			count: 1
+			path: templates/single-video.php
+
+		-
+			message: "#^Function wp_get_post_terms not found\\.$#"
+			count: 1
+			path: templates/single-video.php
+
+		-
+			message: "#^Call to method have_posts\\(\\) on an unknown class WP_Query\\.$#"
+			count: 2
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Call to method the_post\\(\\) on an unknown class WP_Query\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 2
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function get_footer not found\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function get_header not found\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function get_post_meta not found\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function get_the_ID not found\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function has_post_thumbnail not found\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function plugins_url not found\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function the_post_thumbnail not found\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function the_title not found\\.$#"
+			count: 3
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Function wp_reset_postdata not found\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Instantiated class WP_Query not found\\.$#"
+			count: 1
+			path: templates/videos-grid.php
+
+		-
+			message: "#^Call to method have_posts\\(\\) on an unknown class WP_Query\\.$#"
+			count: 2
+			path: templates/videos-list.php
+
+		-
+			message: "#^Call to method the_post\\(\\) on an unknown class WP_Query\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function esc_attr not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function esc_url not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function get_footer not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function get_header not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function get_post_meta not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function get_the_ID not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function get_the_excerpt not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function has_post_thumbnail not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function plugins_url not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function the_permalink not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function the_post_thumbnail not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function the_title not found\\.$#"
+			count: 3
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function wp_reset_postdata not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function wp_trim_words not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Instantiated class WP_Query not found\\.$#"
+			count: 1
+			path: templates/videos-list.php
+
+		-
+			message: "#^Function __ not found\\.$#"
+			count: 12
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 12
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function add_filter not found\\.$#"
+			count: 2
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function add_menu_page not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function add_submenu_page not found\\.$#"
+			count: 4
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function deactivate_plugins not found\\.$#"
+			count: 3
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function delete_transient not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function do_action not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function esc_html not found\\.$#"
+			count: 3
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function esc_html__ not found\\.$#"
+			count: 4
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function esc_html_e not found\\.$#"
+			count: 4
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 10
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function get_page_template_slug not found\\.$#"
+			count: 2
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function get_transient not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function is_admin not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function is_page not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function is_plugin_active not found\\.$#"
+			count: 2
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function load_plugin_textdomain not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function plugin_basename not found\\.$#"
+			count: 2
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function plugin_dir_path not found\\.$#"
+			count: 5
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function plugin_dir_url not found\\.$#"
+			count: 2
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function plugins_url not found\\.$#"
+			count: 4
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function register_activation_hook not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function rest_url not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function set_transient not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function update_option not found\\.$#"
+			count: 4
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function wp_add_inline_script not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function wp_create_nonce not found\\.$#"
+			count: 2
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function wp_die not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function wp_enqueue_script not found\\.$#"
+			count: 7
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function wp_enqueue_style not found\\.$#"
+			count: 2
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function wp_json_encode not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function wp_localize_script not found\\.$#"
+			count: 2
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function wp_script_is not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Function wp_style_is not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(string\\)\\: mixed\\)\\|null, 'esc_html' given\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php

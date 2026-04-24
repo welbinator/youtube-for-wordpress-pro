@@ -1,0 +1,9 @@
+version = 1
+
+[[analyzers]]
+name = "php"
+enabled = true
+
+  [analyzers.meta]
+  php_version = "8.2"
+  wordpress_version = "6.0"
