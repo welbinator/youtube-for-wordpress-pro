@@ -25,6 +25,17 @@ function yt_for_wp_set_post_thumbnail_from_url( $post_id, $image_url ) {
 		return false;
 	}
 
+	// Validate Content-Type is an image before writing to disk.
+	$content_type = wp_remote_retrieve_header( $response, 'content-type' );
+	if ( $content_type && ! str_starts_with( $content_type, 'image/' ) ) {
+		return false;
+	}
+
+	// Enforce a 5MB size limit to prevent writing arbitrarily large files.
+	if ( strlen( $response['body'] ) > 5 * 1024 * 1024 ) {
+		return false;
+	}
+
 	// Get the file name from the image URL.
 	$image_name = basename( wp_parse_url( $image_url, PHP_URL_PATH ) );
 
