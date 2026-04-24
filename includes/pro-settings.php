@@ -52,11 +52,11 @@ function render_channels_page() {
 		<table class="form-table">
 			<tr>
 				<th scope="row">
-					<label for="yt_channel_id"><?php esc_html_e( 'YouTube Channel ID', 'yt-for-wp-pro' ); ?></label>
+					<label for="yt_channel_id"><?php esc_html_e( 'YouTube Channel URL or Handle', 'yt-for-wp-pro' ); ?></label>
 				</th>
 				<td>
 					<input type="text" name="yt_channel_id" id="yt_channel_id" class="regular-text" />
-					<p class="description"><?php esc_html_e( 'Enter the YouTube channel ID. The channel name will be automatically fetched from YouTube.', 'yt-for-wp-pro' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Paste a channel URL (e.g. https://www.youtube.com/@ChannelName), a handle (@ChannelName), or a channel ID. The channel name will be automatically fetched..', 'yt-for-wp-pro' ); ?></p>
 					<p class="description error" id="yt-channel-error" style="color: #d63638; font-weight: bold; display: none;"></p>
 				</td>
 			</tr>

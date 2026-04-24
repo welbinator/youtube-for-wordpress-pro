@@ -136,4 +136,113 @@ class Channel_Manager {
 
 		return sanitize_text_field( $data['items'][0]['snippet']['title'] );
 	}
+
+	/**
+	 * Resolve a YouTube channel URL or handle to a channel ID and name.
+	 *
+	 * Supports:
+	 * - https://www.youtube.com/channel/UCxxxxxx
+	 * - https://www.youtube.com/@HandleName
+	 * - https://www.youtube.com/c/CustomName
+	 * - https://www.youtube.com/user/Username
+	 * - @HandleName (bare handle)
+	 * - UCxxxxxx (bare channel ID)
+	 *
+	 * @param string $input URL, handle, or channel ID.
+	 * @return array|\WP_Error Array with 'id' and 'name', or WP_Error.
+	 */
+	public static function resolve_url( string $input ) {
+		$input = trim( $input );
+
+		$api_key = function_exists( 'YouTubeForWP\Admin\Settings\get_api_key' )
+			? \YouTubeForWP\Admin\Settings\get_api_key()
+			: get_option( 'yt_for_wp_api_key', '' );
+
+		if ( ! $api_key ) {
+			return new \WP_Error( 'no_api_key', __( 'Please configure your YouTube API key in Settings before adding channels.', 'yt-for-wp-pro' ) );
+		}
+
+		// Extract from URL if it looks like one.
+		if ( strpos( $input, 'youtube.com' ) !== false ) {
+			$parsed = wp_parse_url( $input );
+			$path   = isset( $parsed['path'] ) ? trim( $parsed['path'], '/' ) : '';
+
+			// youtube.com/channel/UCxxxxxx.
+			if ( preg_match( '#^channel/(UC[\w-]{22})#', $path, $m ) ) {
+				$channel_id = $m[1];
+				$name       = self::fetch_channel_name( $channel_id );
+				return is_wp_error( $name )
+					? array( 'id' => $channel_id, 'name' => $channel_id )
+					: array( 'id' => $channel_id, 'name' => $name );
+			}
+
+			// youtube.com/@Handle.
+			if ( preg_match( '#^@([\w.-]+)#', $path, $m ) ) {
+				$input = '@' . $m[1];
+			}
+
+			// youtube.com/c/Name or youtube.com/user/Name.
+			if ( preg_match( '#^(?:c|user)/([\w.-]+)#', $path, $m ) ) {
+				$input = $m[1];
+			}
+		}
+
+		// Bare channel ID (starts with UC and is 24 chars).
+		if ( preg_match( '/^UC[\w-]{22}$/', $input ) ) {
+			$name = self::fetch_channel_name( $input );
+			return is_wp_error( $name )
+				? array( 'id' => $input, 'name' => $input )
+				: array( 'id' => $input, 'name' => $name );
+		}
+
+		// Handle (@HandleName or bare handle name).
+		$handle = ltrim( $input, '@' );
+		$url    = add_query_arg(
+			array(
+				'part'      => 'snippet',
+				'forHandle' => '@' . $handle,
+				'key'       => $api_key,
+			),
+			'https://www.googleapis.com/youtube/v3/channels'
+		);
+
+		$response = wp_remote_get( $url );
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( ! empty( $data['items'][0] ) ) {
+			return array(
+				'id'   => sanitize_text_field( $data['items'][0]['id'] ),
+				'name' => sanitize_text_field( $data['items'][0]['snippet']['title'] ),
+			);
+		}
+
+		// Fallback: search by name.
+		$search_url = add_query_arg(
+			array(
+				'part'  => 'snippet',
+				'type'  => 'channel',
+				'q'     => $handle,
+				'key'   => $api_key,
+			),
+			'https://www.googleapis.com/youtube/v3/search'
+		);
+
+		$search_response = wp_remote_get( $search_url );
+		if ( is_wp_error( $search_response ) ) {
+			return $search_response;
+		}
+
+		$search_data = json_decode( wp_remote_retrieve_body( $search_response ), true );
+		if ( ! empty( $search_data['items'][0]['id']['channelId'] ) ) {
+			return array(
+				'id'   => sanitize_text_field( $search_data['items'][0]['id']['channelId'] ),
+				'name' => sanitize_text_field( $search_data['items'][0]['snippet']['channelTitle'] ),
+			);
+		}
+
+		return new \WP_Error( 'not_found', __( 'Could not find a YouTube channel for that URL or handle.', 'yt-for-wp-pro' ) );
+	}
 }

@@ -71,12 +71,24 @@ add_action(
 			wp_send_json_error( __( 'Permission denied.', 'yt-for-wp-pro' ) );
 		}
 
-		$channel_id = isset( $_POST['channel_id'] ) ? sanitize_text_field( wp_unslash( $_POST['channel_id'] ) ) : '';
-		$result     = \YouTubeForWPPro\Channels\Channel_Manager::add( $channel_id );
+		// Accept a URL, handle, or raw channel ID.
+		$input  = isset( $_POST['channel_id'] ) ? sanitize_text_field( wp_unslash( $_POST['channel_id'] ) ) : '';
+		$result = \YouTubeForWPPro\Channels\Channel_Manager::resolve_url( $input );
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( $result->get_error_message() );
 		}
+
+		// Check for duplicate.
+		foreach ( \YouTubeForWPPro\Channels\Channel_Manager::get_all() as $ch ) {
+			if ( $ch['id'] === $result['id'] ) {
+				wp_send_json_error( __( 'That channel has already been added.', 'yt-for-wp-pro' ) );
+			}
+		}
+
+		$channels   = \YouTubeForWPPro\Channels\Channel_Manager::get_all();
+		$channels[] = $result;
+		update_option( 'yt_for_wp_channels', $channels );
 
 		// Return the updated channel list.
 		wp_send_json_success( \YouTubeForWPPro\Channels\Channel_Manager::get_all() );
