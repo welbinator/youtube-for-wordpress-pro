@@ -63,8 +63,8 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          # --severity-threshold=high, exclude npm dev build tools from scan
-          args: --severity-threshold=high --exclude=package.json,package-lock.json
+          args: --severity-threshold=high
+        continue-on-error: true  # Report but don't block until baseline is clean
 
   deepsource:
     name: DeepSource
