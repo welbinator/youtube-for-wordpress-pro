@@ -547,7 +547,7 @@ echo \'<iframe src="\' . esc_url( $embed_url ) . \'" allowfullscreen></iframe>\'
 		?>
 																												</pre>
 
-		<h3><?php esc_html_e( 'Querying videos by post type', 'yt-for-wp-pro' ); ?></h3>
+		<h2><?php esc_html_e( 'Querying videos by post type', 'yt-for-wp-pro' ); ?></h2>
 		<p>
 			<?php
 			$post_types = \YouTubeForWPPro\VideoCPT\Video_Post_Type::get_all();
@@ -577,6 +577,14 @@ $videos = new WP_Query( [
 		?>
 																												</pre>
 
+		<h2><?php esc_html_e( 'Security: Protecting Your API Key', 'yt-for-wp-pro' ); ?></h2>
+		<p><?php esc_html_e( 'By default, your YouTube API key is stored encrypted in the WordPress database. For stronger protection, you can move the encryption key out of the database entirely by defining it in your wp-config.php file. This way, even if your database is compromised, the key cannot be decrypted without also having access to your server files.', 'yt-for-wp-pro' ); ?></p>
+		<p><?php esc_html_e( 'Add the following line to your wp-config.php (before the line that says "That\'s all, stop editing!"):', 'yt-for-wp-pro' ); ?></p>
+		<pre style="background:#f6f7f7; padding:16px; border:1px solid #ddd; max-width:800px; overflow-x:auto;"><?php echo esc_html( "define( 'YT_FOR_WP_ENCRYPTION_KEY', 'your-random-32-character-string-here' );" ); ?></pre>
+		<p><?php esc_html_e( 'Replace the placeholder with a unique random string of at least 32 characters. You can generate one at', 'yt-for-wp-pro' ); ?> <a href="https://api.wordpress.org/secret-key/1.1/salt/" target="_blank">api.wordpress.org/secret-key</a>.</p>
+		<p><strong><?php esc_html_e( 'Important:', 'yt-for-wp-pro' ); ?></strong> <?php esc_html_e( 'If you add this constant after already saving an API key, you will need to re-enter your API key in Settings so it gets re-encrypted with the new key.', 'yt-for-wp-pro' ); ?></p>
+
 	</div>
 	<?php
 }
+

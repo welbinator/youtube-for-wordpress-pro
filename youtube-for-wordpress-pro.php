@@ -3,7 +3,7 @@
  * Plugin Name: YouTube for WordPress Pro
  * Plugin URI: https://jameswelbes.com/youtube-for-wordpress
  * Description: A complete toolkit for integrating YouTube functionalities into WordPress with premium features.
- * Version: 2.1.0
+ * Version: 2.1.1
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Author: James Welbes
@@ -19,6 +19,25 @@
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+// Initialize Sentry error tracking (only if user has opted in).
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+	add_action(
+		'plugins_loaded',
+		function () {
+			if ( '1' === get_option( 'yt_for_wp_sentry_optin' ) ) {
+				\Sentry\init( [
+					'dsn'                  => 'https://ba957d80d0d1600a985f780cf29bc59e@o4511277283409920.ingest.us.sentry.io/4511277284851712',
+					'traces_sample_rate'   => 1.0,
+					'profiles_sample_rate' => 1.0,
+					'enable_logs'          => true,
+				] );
+			}
+		},
+		1
+	);
 }
 
 // Include plugin.php for is_plugin_active() and deactivate_plugins().
@@ -69,12 +88,12 @@ if ( defined( 'YOUTUBE_FOR_WP_ACTIVE' ) && defined( 'YT_FOR_WP_PATH' ) && YT_FOR
 
 // Define plugin constants for Pro version.
 define( 'YOUTUBEFORWORDPRESS_PRO', __FILE__ );
-define( 'YOUTUBE_FOR_WP_PRO_VERSION', '2.1.0' );
+define( 'YOUTUBE_FOR_WP_PRO_VERSION', '2.1.1' );
 define( 'YT_FOR_WP_PRO_PATH', plugin_dir_path( __FILE__ ) );
 define( 'YT_FOR_WP_PRO_URL', plugin_dir_url( __FILE__ ) );
 
 // Define constants for core functionality (formerly free plugin).
-define( 'YOUTUBE_FOR_WP_VERSION', '2.1.0' );
+define( 'YOUTUBE_FOR_WP_VERSION', '2.1.1' );
 define( 'YT_FOR_WP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'YT_FOR_WP_URL', plugin_dir_url( __FILE__ ) );
 define( 'YT_FOR_WP_MIN_WP_VERSION', '5.8' );

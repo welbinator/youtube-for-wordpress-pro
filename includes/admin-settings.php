@@ -309,6 +309,42 @@ function register_settings() {
 	);
 
 	// Channel ID is now managed via the Channels page.
+
+	// Register Sentry error reporting opt-in setting.
+	add_settings_field(
+		'yt_for_wp_sentry_optin',
+		__( 'Error Reporting', 'yt-for-wp-pro' ),
+		function () {
+			$optin = get_option( 'yt_for_wp_sentry_optin', '' );
+			?>
+			<label>
+				<input
+					type="checkbox"
+					name="yt_for_wp_sentry_optin"
+					value="1"
+					<?php checked( '1', $optin ); ?>
+				/>
+				<?php esc_html_e( 'Help improve this plugin by sending anonymous error reports', 'yt-for-wp-pro' ); ?>
+			</label>
+			<p class="description">
+				<?php esc_html_e( 'When enabled, PHP errors and exceptions are sent to Sentry to help us identify and fix bugs. No personal data is collected.', 'yt-for-wp-pro' ); ?>
+			</p>
+			<?php
+		},
+		'yt-for-wp-settings',
+		'yt_for_wp_main_section'
+	);
+
+	register_setting(
+		'yt_for_wp_settings',
+		'yt_for_wp_sentry_optin',
+		array(
+			'sanitize_callback' => function ( $input ) {
+				return $input ? '1' : '0';
+			},
+			'show_in_rest'      => false,
+		)
+	);
 }
 add_action( 'admin_init', __NAMESPACE__ . '\\register_settings' );
 
@@ -324,16 +360,6 @@ function render_settings_page() {
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'YouTube for WordPress Settings', 'yt-for-wp-pro' ); ?></h1>
-
-		<?php if ( ! defined( 'YT_FOR_WP_ENCRYPTION_KEY' ) ) : ?>
-		<div class="notice notice-info">
-			<p>
-				<strong><?php esc_html_e( 'Security tip:', 'yt-for-wp-pro' ); ?></strong>
-				<?php esc_html_e( 'For stronger API key protection, add the following line to your wp-config.php. This stores the encryption key outside the database so it cannot be used even if your database is compromised.', 'yt-for-wp-pro' ); ?>
-			</p>
-			<p><code>define( 'YT_FOR_WP_ENCRYPTION_KEY', '<?php echo esc_html( wp_generate_password( 32, true, true ) ); ?>' );</code></p>
-		</div>
-		<?php endif; ?>
 
 		<?php
 		settings_errors( 'yt_for_wp_api_key' );
@@ -354,6 +380,42 @@ function render_settings_page() {
 			?>
 		</form>
 	</div>
+
+	<?php if ( ! get_option( 'yt_for_wp_sentry_modal_shown' ) ) : ?>
+	<div id="yt-for-wp-sentry-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:99999; align-items:center; justify-content:center;">
+		<div style="background:#fff; border-radius:4px; padding:32px; max-width:480px; width:90%; box-shadow:0 4px 24px rgba(0,0,0,.2);">
+			<h2 style="margin-top:0;"><?php esc_html_e( 'Help Us Improve', 'yt-for-wp-pro' ); ?></h2>
+			<p><?php esc_html_e( 'Would you like to help improve YouTube for WordPress Pro by sending anonymous error reports? This helps us identify and fix bugs faster.', 'yt-for-wp-pro' ); ?></p>
+			<p style="font-size:12px; color:#666;"><?php esc_html_e( 'No personal data is collected. You can change this at any time in the settings below.', 'yt-for-wp-pro' ); ?></p>
+			<div style="display:flex; gap:12px; margin-top:24px;">
+				<button id="yt-sentry-optin-yes" class="button button-primary"><?php esc_html_e( 'Yes, I\'ll help!', 'yt-for-wp-pro' ); ?></button>
+				<button id="yt-sentry-optin-no" class="button"><?php esc_html_e( 'No thanks', 'yt-for-wp-pro' ); ?></button>
+			</div>
+		</div>
+	</div>
+	<script>
+	(function() {
+		var modal = document.getElementById('yt-for-wp-sentry-modal');
+		if (!modal) return;
+		modal.style.display = 'flex';
+
+		function dismissModal(optin) {
+			modal.style.display = 'none';
+			var data = new FormData();
+			data.append('action', 'yt_for_wp_sentry_modal_response');
+			data.append('optin', optin ? '1' : '0');
+			data.append('nonce', '<?php echo esc_js( wp_create_nonce( 'yt-for-wp-sentry-modal' ) ); ?>');
+			fetch('<?php echo esc_js( admin_url( 'admin-ajax.php' ) ); ?>', { method: 'POST', body: data });
+			// Update checkbox to match choice.
+			var cb = document.querySelector('input[name="yt_for_wp_sentry_optin"]');
+			if (cb) cb.checked = !!optin;
+		}
+
+		document.getElementById('yt-sentry-optin-yes').addEventListener('click', function() { dismissModal(true); });
+		document.getElementById('yt-sentry-optin-no').addEventListener('click', function() { dismissModal(false); });
+	})();
+	</script>
+	<?php endif; ?>
 	<?php
 }
 
@@ -448,3 +510,22 @@ function validate_api_key( $api_key ) {
 
 	return __( 'API Key Valid.', 'yt-for-wp-pro' );
 }
+
+/**
+ * Handle the Sentry opt-in modal AJAX response.
+ * Saves the user's choice and marks the modal as shown (never show again).
+ */
+function handle_sentry_modal_response() {
+	check_ajax_referer( 'yt-for-wp-sentry-modal', 'nonce' );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( 'Insufficient permissions.' );
+	}
+
+	$optin = isset( $_POST['optin'] ) && '1' === $_POST['optin'] ? '1' : '0';
+	update_option( 'yt_for_wp_sentry_optin', $optin );
+	update_option( 'yt_for_wp_sentry_modal_shown', '1' );
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_yt_for_wp_sentry_modal_response', __NAMESPACE__ . '\\handle_sentry_modal_response' );
