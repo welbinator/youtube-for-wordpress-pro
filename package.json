@@ -5,7 +5,8 @@
   "scripts": {
     "start": "wp-scripts start",
     "copy-swiper-css": "mkdir -p build/css && cp node_modules/swiper/swiper-bundle.min.css build/css/",
-    "build": "wp-scripts build && npm run copy-swiper-css"
+    "build": "wp-scripts build && npm run copy-swiper-css && npm run restore-block-builds",
+    "restore-block-builds": "git checkout origin/main -- build/simple-youtube-feed build/youtube-live build/css"
   },
   "author": "James Welbes",
   "license": "GPL-2.0-or-later",
