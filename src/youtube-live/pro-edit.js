@@ -1,7 +1,17 @@
 import { addFilter } from '@wordpress/hooks';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, TextControl } from '@wordpress/components';
+import { PanelBody, SelectControl } from '@wordpress/components';
+
+// Build channel options from ytForWPProEditor global (injected by PHP).
+const getChannelOptions = () => {
+    const channels = ( window.ytForWPProEditor && window.ytForWPProEditor.channels ) || [];
+    const options = [ { label: '— Use default from settings —', value: '' } ];
+    channels.forEach( ( ch ) => {
+        options.push( { label: ch.name || ch.channel_id, value: ch.channel_id } );
+    } );
+    return options;
+};
 
 const addProAttributes = (settings, name) => {
     if (name === 'yt-for-wp/youtube-live') {
@@ -23,11 +33,12 @@ const withProControls = createHigherOrderComponent((BlockEdit) => {
                     <BlockEdit {...props} />
                     <InspectorControls>
                         <PanelBody title="Pro Features">
-                            <TextControl
-                                label="YouTube Channel ID (Pro)"
+                            <SelectControl
+                                label="YouTube Channel (Pro)"
                                 value={attributes.channelId}
+                                options={getChannelOptions()}
                                 onChange={(value) => setAttributes({ channelId: value })}
-                                help="Leave blank to use the default Channel ID from settings."
+                                help="Select a channel, or leave as default to use the channel from Settings."
                             />
                         </PanelBody>
                     </InspectorControls>

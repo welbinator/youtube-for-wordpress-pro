@@ -367,6 +367,18 @@ add_action(
 			$asset_file['version'],
 			true
 		);
+
+		wp_add_inline_script(
+			'yt-for-wp-pro-block-editor',
+			'var ytForWPProEditor = ' . wp_json_encode(
+				array(
+					'channels' => class_exists( 'YouTubeForWPPro\Channels\Channel_Manager' )
+						? \YouTubeForWPPro\Channels\Channel_Manager::get_all()
+						: array(),
+				)
+			) . ';',
+			'before'
+		);
 	}
 );
 
