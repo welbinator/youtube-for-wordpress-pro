@@ -8,7 +8,7 @@ const getChannelOptions = () => {
     const channels = ( window.ytForWPProEditor && window.ytForWPProEditor.channels ) || [];
     const options = [ { label: '— Use default from settings —', value: '' } ];
     channels.forEach( ( ch ) => {
-        options.push( { label: ch.name || ch.channel_id, value: ch.channel_id } );
+        options.push( { label: ch.name || ch.id, value: ch.id } );
     } );
     return options;
 };

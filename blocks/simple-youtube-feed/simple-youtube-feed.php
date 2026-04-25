@@ -37,7 +37,7 @@ function render_youtube_feed_block( $attributes, $content ) { // phpcs:ignore Ge
 	// Get the API key and channel ID.
 	$api_key            = \YouTubeForWP\Admin\Settings\get_api_key();
 	$channels           = \YouTubeForWPPro\Channels\Channel_Manager::get_all();
-	$default_channel_id = ! empty( $channels[0]['channel_id'] ) ? $channels[0]['channel_id'] : get_option( 'yt_for_wp_channel_id' );
+	$default_channel_id = ! empty( $channels[0]['id'] ) ? $channels[0]['id'] : get_option( 'yt_for_wp_channel_id' );
 
 	// Use block channel ID if set, otherwise use default.
 	$channel_id = ! empty( $attributes['channelId'] ) ? $attributes['channelId'] : $default_channel_id;
@@ -188,7 +188,7 @@ add_action(
 				'methods'             => 'GET',
 				'callback'            => function ( \WP_REST_Request $request ) {
 					$channels    = \YouTubeForWPPro\Channels\Channel_Manager::get_all();
-					$default_id  = ! empty( $channels[0]['channel_id'] ) ? $channels[0]['channel_id'] : get_option( 'yt_for_wp_channel_id' );
+					$default_id  = ! empty( $channels[0]['id'] ) ? $channels[0]['id'] : get_option( 'yt_for_wp_channel_id' );
 					$channel_id  = $request->get_param( 'channelId' ) ? $request->get_param( 'channelId' ) : $default_id;
 					$max_results = intval( $request->get_param( 'maxResults' ) ? $request->get_param( 'maxResults' ) : 5 );
 					$api_key     = \YouTubeForWP\Admin\Settings\get_api_key();
