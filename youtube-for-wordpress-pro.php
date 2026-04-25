@@ -3,7 +3,7 @@
  * Plugin Name: YouTube for WordPress Pro
  * Plugin URI: https://jameswelbes.com/youtube-for-wordpress
  * Description: A complete toolkit for integrating YouTube functionalities into WordPress with premium features.
- * Version: 2.1.1
+ * Version: 2.2.0
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Author: James Welbes
@@ -90,12 +90,12 @@ if ( defined( 'YOUTUBE_FOR_WP_ACTIVE' ) && defined( 'YT_FOR_WP_PATH' ) && YT_FOR
 
 // Define plugin constants for Pro version.
 define( 'YOUTUBEFORWORDPRESS_PRO', __FILE__ );
-define( 'YOUTUBE_FOR_WP_PRO_VERSION', '2.1.1' );
+define( 'YOUTUBE_FOR_WP_PRO_VERSION', '2.2.0' );
 define( 'YT_FOR_WP_PRO_PATH', plugin_dir_path( __FILE__ ) );
 define( 'YT_FOR_WP_PRO_URL', plugin_dir_url( __FILE__ ) );
 
 // Define constants for core functionality (formerly free plugin).
-define( 'YOUTUBE_FOR_WP_VERSION', '2.1.1' );
+define( 'YOUTUBE_FOR_WP_VERSION', '2.2.0' );
 define( 'YT_FOR_WP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'YT_FOR_WP_URL', plugin_dir_url( __FILE__ ) );
 define( 'YT_FOR_WP_MIN_WP_VERSION', '5.8' );
