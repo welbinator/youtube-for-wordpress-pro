@@ -34,10 +34,15 @@ jobs:
         "youtube-for-wordpress-pro/node_modules/*" \
         "youtube-for-wordpress-pro/.gitignore"
 
+    - name: Generate SHA-256 hash
+      run: sha256sum youtube-for-wordpress-pro-${{ github.event.inputs.tag }}.zip > youtube-for-wordpress-pro-${{ github.event.inputs.tag }}.zip.sha256
+
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        files: youtube-for-wordpress-pro-${{ github.event.inputs.tag }}.zip
+        files: |
+          youtube-for-wordpress-pro-${{ github.event.inputs.tag }}.zip
+          youtube-for-wordpress-pro-${{ github.event.inputs.tag }}.zip.sha256
         tag_name: ${{ github.event.inputs.tag }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

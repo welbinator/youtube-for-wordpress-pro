@@ -50,6 +50,12 @@ class API_Key_Handler {
 	 * @return string|false Raw binary key or false on failure.
 	 */
 	private function get_encryption_key() {
+		// Prefer a constant defined in wp-config.php for better security separation.
+		// When a constant is used, the key is not stored in the database alongside the encrypted data.
+		if ( defined( 'YT_FOR_WP_ENCRYPTION_KEY' ) && '' !== YT_FOR_WP_ENCRYPTION_KEY ) {
+			return hash( 'sha256', YT_FOR_WP_ENCRYPTION_KEY, true );
+		}
+
 		$key = get_option( self::ENCRYPTION_KEY_OPTION );
 
 		if ( ! $key ) {
@@ -318,6 +324,16 @@ function render_settings_page() {
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'YouTube for WordPress Settings', 'yt-for-wp-pro' ); ?></h1>
+
+		<?php if ( ! defined( 'YT_FOR_WP_ENCRYPTION_KEY' ) ) : ?>
+		<div class="notice notice-info">
+			<p>
+				<strong><?php esc_html_e( 'Security tip:', 'yt-for-wp-pro' ); ?></strong>
+				<?php esc_html_e( 'For stronger API key protection, add the following line to your wp-config.php. This stores the encryption key outside the database so it cannot be used even if your database is compromised.', 'yt-for-wp-pro' ); ?>
+			</p>
+			<p><code>define( 'YT_FOR_WP_ENCRYPTION_KEY', '<?php echo esc_html( wp_generate_password( 32, true, true ) ); ?>' );</code></p>
+		</div>
+		<?php endif; ?>
 
 		<?php
 		settings_errors( 'yt_for_wp_api_key' );

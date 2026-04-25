@@ -187,7 +187,7 @@ parameters:
 
 		-
 			message: "#^Function esc_html not found\\.$#"
-			count: 1
+			count: 2
 			path: includes/admin-settings.php
 
 		-
@@ -197,7 +197,7 @@ parameters:
 
 		-
 			message: "#^Function esc_html_e not found\\.$#"
-			count: 2
+			count: 4
 			path: includes/admin-settings.php
 
 		-
@@ -247,6 +247,11 @@ parameters:
 
 		-
 			message: "#^Function wp_die not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function wp_generate_password not found\\.$#"
 			count: 1
 			path: includes/admin-settings.php
 
@@ -313,11 +318,6 @@ parameters:
 		-
 			message: "#^Function esc_url_raw not found\\.$#"
 			count: 1
-			path: includes/ajax-handlers.php
-
-		-
-			message: "#^Function get_option not found\\.$#"
-			count: 2
 			path: includes/ajax-handlers.php
 
 		-
@@ -417,7 +417,7 @@ parameters:
 
 		-
 			message: "#^Function get_option not found\\.$#"
-			count: 3
+			count: 1
 			path: includes/class-channel-manager.php
 
 		-
@@ -521,6 +521,11 @@ parameters:
 			path: includes/functions.php
 
 		-
+			message: "#^Function wp_remote_retrieve_header not found\\.$#"
+			count: 1
+			path: includes/functions.php
+
+		-
 			message: "#^Function wp_update_attachment_metadata not found\\.$#"
 			count: 1
 			path: includes/functions.php
@@ -532,7 +537,7 @@ parameters:
 
 		-
 			message: "#^Function __ not found\\.$#"
-			count: 27
+			count: 28
 			path: includes/pro-features/class-video-post-type.php
 
 		-
@@ -576,13 +581,18 @@ parameters:
 			path: includes/pro-features/class-video-post-type.php
 
 		-
+			message: "#^Function taxonomy_exists not found\\.$#"
+			count: 1
+			path: includes/pro-features/class-video-post-type.php
+
+		-
 			message: "#^Function update_option not found\\.$#"
 			count: 2
 			path: includes/pro-features/class-video-post-type.php
 
 		-
 			message: "#^Instantiated class WP_Error not found\\.$#"
-			count: 7
+			count: 8
 			path: includes/pro-features/class-video-post-type.php
 
 		-
@@ -911,6 +921,11 @@ parameters:
 			path: youtube-for-wordpress-pro.php
 
 		-
+			message: "#^Function delete_option not found\\.$#"
+			count: 1
+			path: youtube-for-wordpress-pro.php
+
+		-
 			message: "#^Function delete_transient not found\\.$#"
 			count: 1
 			path: youtube-for-wordpress-pro.php
@@ -937,7 +952,7 @@ parameters:
 
 		-
 			message: "#^Function get_option not found\\.$#"
-			count: 10
+			count: 12
 			path: youtube-for-wordpress-pro.php
 
 		-
@@ -1007,7 +1022,7 @@ parameters:
 
 		-
 			message: "#^Function update_option not found\\.$#"
-			count: 4
+			count: 5
 			path: youtube-for-wordpress-pro.php
 
 		-

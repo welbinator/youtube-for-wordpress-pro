@@ -3,6 +3,9 @@
  * Template Name: Videos Page List View
  * Description: A custom page template to display posts from the yt-4-wp-video CPT in a list view with a modal for YouTube videos.
  *
+ * @public These templates are intentionally public-facing and require no capability gate.
+ *         If login is required site-wide, handle it at the theme level.
+ *
  * @package YouTubeForWordPressPro
  */
 

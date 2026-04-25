@@ -19,9 +19,7 @@ add_action(
 			wp_send_json_error( __( 'Channel ID is required.', 'yt-for-wp-pro' ) );
 		}
 
-		$api_key = function_exists( 'YouTubeForWP\Admin\Settings\get_api_key' )
-			? \YouTubeForWP\Admin\Settings\get_api_key()
-			: get_option( 'yt_for_wp_api_key', '' );
+		$api_key = \YouTubeForWP\Admin\Settings\get_api_key();
 
 		if ( ! $api_key ) {
 			wp_send_json_error( __( 'API Key not configured.', 'yt-for-wp-pro' ) );
@@ -37,7 +35,7 @@ add_action(
 			'https://www.googleapis.com/youtube/v3/playlists'
 		);
 
-		$response = wp_remote_get( $url );
+		$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
 		if ( is_wp_error( $response ) ) {
 			wp_send_json_error( $response->get_error_message() );
 		}
@@ -223,9 +221,7 @@ add_action(
 			wp_send_json_error( __( 'Selected post type not found.', 'yt-for-wp-pro' ) );
 		}
 
-		$api_key = function_exists( 'YouTubeForWP\Admin\Settings\get_api_key' )
-			? \YouTubeForWP\Admin\Settings\get_api_key()
-			: get_option( 'yt_for_wp_api_key', '' );
+		$api_key = \YouTubeForWP\Admin\Settings\get_api_key();
 
 		if ( ! $api_key ) {
 			wp_send_json_error( __( 'API Key not configured.', 'yt-for-wp-pro' ) );
@@ -242,7 +238,7 @@ add_action(
 			'https://www.googleapis.com/youtube/v3/playlists'
 		);
 
-		$playlists_response = wp_remote_get( $playlists_url );
+		$playlists_response = wp_remote_get( $playlists_url, array( 'timeout' => 10 ) );
 
 		if ( is_wp_error( $playlists_response ) ) {
 			wp_send_json_error( $playlists_response->get_error_message() );
@@ -297,7 +293,7 @@ add_action(
 			);
 		}
 
-		$videos_response = wp_remote_get( $videos_url );
+		$videos_response = wp_remote_get( $videos_url, array( 'timeout' => 10 ) );
 
 		if ( is_wp_error( $videos_response ) ) {
 			wp_send_json_error( $videos_response->get_error_message() );
@@ -330,7 +326,7 @@ add_action(
 			'https://www.googleapis.com/youtube/v3/videos'
 		);
 
-		$details_response = wp_remote_get( $videos_details_url );
+		$details_response = wp_remote_get( $videos_details_url, array( 'timeout' => 10 ) );
 
 		if ( is_wp_error( $details_response ) ) {
 			wp_send_json_error( $details_response->get_error_message() );
@@ -340,6 +336,35 @@ add_action(
 
 		if ( empty( $details['items'] ) ) {
 			wp_send_json_error( __( 'No video details found.', 'yt-for-wp-pro' ) );
+		}
+
+		// Pre-build a map of video_id => [term_ids] from all playlists.
+		// This avoids N+1 API calls inside the video insert loop.
+		$video_term_map = array();
+		foreach ( $playlist_map as $pl_id => $term_id ) {
+			$pl_items_url      = add_query_arg(
+				array(
+					'part'       => 'snippet',
+					'playlistId' => $pl_id,
+					'maxResults' => 50,
+					'key'        => $api_key,
+				),
+				'https://www.googleapis.com/youtube/v3/playlistItems'
+			);
+			$pl_items_response = wp_remote_get( $pl_items_url, array( 'timeout' => 10 ) );
+			if ( is_wp_error( $pl_items_response ) ) {
+				continue;
+			}
+			$pl_items = json_decode( wp_remote_retrieve_body( $pl_items_response ), true );
+			if ( empty( $pl_items['items'] ) ) {
+				continue;
+			}
+			foreach ( $pl_items['items'] as $item ) {
+				$vid_id = $item['snippet']['resourceId']['videoId'] ?? '';
+				if ( $vid_id ) {
+					$video_term_map[ $vid_id ][] = $term_id;
+				}
+			}
 		}
 
 		$imported = 0;
@@ -410,35 +435,9 @@ add_action(
 				// Add video URL as custom field.
 				update_post_meta( $post_id, '_yt_video_url', esc_url_raw( $video_url ) );
 
-				// Check for playlist association.
-				foreach ( $playlist_map as $playlist_id => $term_id ) {
-					$playlist_items_url = add_query_arg(
-						array(
-							'part'       => 'snippet',
-							'playlistId' => $playlist_id,
-							'maxResults' => 50,
-							'key'        => $api_key,
-						),
-						'https://www.googleapis.com/youtube/v3/playlistItems'
-					);
-
-					$playlist_items_response = wp_remote_get( $playlist_items_url );
-
-					if ( is_wp_error( $playlist_items_response ) ) {
-						continue;
-					}
-
-					$playlist_items = json_decode( wp_remote_retrieve_body( $playlist_items_response ), true );
-					if ( empty( $playlist_items['items'] ) ) {
-						continue;
-					}
-
-					foreach ( $playlist_items['items'] as $item ) {
-						if ( $item['snippet']['resourceId']['videoId'] === $video_id ) {
-							wp_set_post_terms( $post_id, array( $term_id ), $taxonomy_slug, true );
-							break;
-						}
-					}
+				// Assign playlist taxonomy terms using the pre-built map (no extra API calls).
+				if ( ! empty( $video_term_map[ $video_id ] ) ) {
+					wp_set_post_terms( $post_id, $video_term_map[ $video_id ], $taxonomy_slug, true );
 				}
 			}
 		}
