@@ -132,12 +132,12 @@ parameters:
 
 		-
 			message: "#^Function __ not found\\.$#"
-			count: 13
+			count: 14
 			path: includes/admin-settings.php
 
 		-
 			message: "#^Function add_action not found\\.$#"
-			count: 1
+			count: 2
 			path: includes/admin-settings.php
 
 		-
@@ -157,7 +157,7 @@ parameters:
 
 		-
 			message: "#^Function add_settings_field not found\\.$#"
-			count: 1
+			count: 2
 			path: includes/admin-settings.php
 
 		-
@@ -166,8 +166,23 @@ parameters:
 			path: includes/admin-settings.php
 
 		-
+			message: "#^Function admin_url not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function check_ajax_referer not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function checked not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
 			message: "#^Function current_user_can not found\\.$#"
-			count: 6
+			count: 7
 			path: includes/admin-settings.php
 
 		-
@@ -187,7 +202,7 @@ parameters:
 
 		-
 			message: "#^Function esc_html not found\\.$#"
-			count: 2
+			count: 1
 			path: includes/admin-settings.php
 
 		-
@@ -197,12 +212,17 @@ parameters:
 
 		-
 			message: "#^Function esc_html_e not found\\.$#"
-			count: 4
+			count: 9
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function esc_js not found\\.$#"
+			count: 2
 			path: includes/admin-settings.php
 
 		-
 			message: "#^Function get_option not found\\.$#"
-			count: 3
+			count: 5
 			path: includes/admin-settings.php
 
 		-
@@ -217,7 +237,7 @@ parameters:
 
 		-
 			message: "#^Function register_setting not found\\.$#"
-			count: 1
+			count: 2
 			path: includes/admin-settings.php
 
 		-
@@ -242,16 +262,16 @@ parameters:
 
 		-
 			message: "#^Function update_option not found\\.$#"
+			count: 3
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function wp_create_nonce not found\\.$#"
 			count: 1
 			path: includes/admin-settings.php
 
 		-
 			message: "#^Function wp_die not found\\.$#"
-			count: 1
-			path: includes/admin-settings.php
-
-		-
-			message: "#^Function wp_generate_password not found\\.$#"
 			count: 1
 			path: includes/admin-settings.php
 
@@ -267,6 +287,16 @@ parameters:
 
 		-
 			message: "#^Function wp_remote_retrieve_body not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function wp_send_json_error not found\\.$#"
+			count: 1
+			path: includes/admin-settings.php
+
+		-
+			message: "#^Function wp_send_json_success not found\\.$#"
 			count: 1
 			path: includes/admin-settings.php
 
@@ -622,7 +652,7 @@ parameters:
 
 		-
 			message: "#^Function esc_html not found\\.$#"
-			count: 16
+			count: 17
 			path: includes/pro-settings.php
 
 		-
@@ -632,7 +662,7 @@ parameters:
 
 		-
 			message: "#^Function esc_html_e not found\\.$#"
-			count: 56
+			count: 62
 			path: includes/pro-settings.php
 
 		-
@@ -892,7 +922,7 @@ parameters:
 
 		-
 			message: "#^Function add_action not found\\.$#"
-			count: 12
+			count: 13
 			path: youtube-for-wordpress-pro.php
 
 		-
@@ -952,7 +982,7 @@ parameters:
 
 		-
 			message: "#^Function get_option not found\\.$#"
-			count: 12
+			count: 13
 			path: youtube-for-wordpress-pro.php
 
 		-

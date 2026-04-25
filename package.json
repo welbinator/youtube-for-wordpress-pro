@@ -5,7 +5,9 @@
   "scripts": {
     "start": "wp-scripts start",
     "copy-swiper-css": "mkdir -p build/css && cp node_modules/swiper/swiper-bundle.min.css build/css/",
-    "build": "wp-scripts build && npm run copy-swiper-css"
+    "prebuild": "cp -r build/simple-youtube-feed /tmp/yt-block-syf 2>/dev/null; cp -r build/youtube-live /tmp/yt-block-live 2>/dev/null; cp -r build/css /tmp/yt-block-css 2>/dev/null; true",
+    "build": "wp-scripts build && npm run copy-swiper-css",
+    "postbuild": "cp -r /tmp/yt-block-syf build/simple-youtube-feed 2>/dev/null; cp -r /tmp/yt-block-live build/youtube-live 2>/dev/null; true"
   },
   "author": "James Welbes",
   "license": "GPL-2.0-or-later",
