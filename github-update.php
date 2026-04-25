@@ -119,8 +119,13 @@ function check_for_updates( $transient ) {
  * @return bool|WP_Error False to proceed, WP_Error to abort.
  */
 function verify_package_integrity( $reply, $package, $upgrader ) {
-	// Only act on our plugin's package.
-	if ( ! isset( $upgrader->skin->plugin_info ) ) {
+	// Only act on our plugin's package URL — never block theme or other plugin installs.
+	if ( empty( $package ) || false === strpos( $package, 'youtube-for-wordpress-pro' ) ) {
+		return $reply;
+	}
+
+	// Also confirm this is a plugin upgrader, not a theme upgrader.
+	if ( ! ( $upgrader instanceof \Plugin_Upgrader ) ) {
 		return $reply;
 	}
 
