@@ -28,12 +28,14 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 		'plugins_loaded',
 		function () {
 			if ( '1' === get_option( 'yt_for_wp_sentry_optin' ) ) {
-				\Sentry\init( [
-					'dsn'                  => 'https://ba957d80d0d1600a985f780cf29bc59e@o4511277283409920.ingest.us.sentry.io/4511277284851712',
-					'traces_sample_rate'   => 1.0,
-					'profiles_sample_rate' => 1.0,
-					'enable_logs'          => true,
-				] );
+				\Sentry\init(
+					array(
+						'dsn'                  => 'https://ba957d80d0d1600a985f780cf29bc59e@o4511277283409920.ingest.us.sentry.io/4511277284851712',
+						'traces_sample_rate'   => 1.0,
+						'profiles_sample_rate' => 1.0,
+						'enable_logs'          => true,
+					)
+				);
 			}
 		},
 		1
