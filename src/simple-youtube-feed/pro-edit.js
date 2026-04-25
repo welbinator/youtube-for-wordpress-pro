@@ -1,7 +1,17 @@
 import { addFilter } from '@wordpress/hooks';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, ToggleControl, TextControl } from '@wordpress/components';
+import { PanelBody, ToggleControl, SelectControl } from '@wordpress/components';
+
+// Build channel options from ytForWPProEditor global (injected by PHP).
+const getChannelOptions = () => {
+    const channels = ( window.ytForWPProEditor && window.ytForWPProEditor.channels ) || [];
+    const options = [ { label: '— Use default from settings —', value: '' } ];
+    channels.forEach( ( ch ) => {
+        options.push( { label: ch.name || ch.id, value: ch.id } );
+    } );
+    return options;
+};
 
 // Extend block attributes
 const addProAttributes = (settings, name) => {
@@ -10,7 +20,7 @@ const addProAttributes = (settings, name) => {
             ...settings.attributes,
             enableSearch: { type: 'boolean', default: false },
             enablePlaylistFilter: { type: 'boolean', default: false },
-            channelId: { type: 'string', default: '' }, // Add Channel ID as a Pro attribute
+            channelId: { type: 'string', default: '' },
         };
     }
     return settings;
@@ -27,11 +37,12 @@ const withProControls = createHigherOrderComponent((BlockEdit) => {
                     <BlockEdit {...props} />
                     <InspectorControls>
                         <PanelBody title="Advanced Features">
-                            <TextControl
-                                label="YouTube Channel ID"
+                            <SelectControl
+                                label="YouTube Channel"
                                 value={attributes.channelId}
+                                options={getChannelOptions()}
                                 onChange={(newChannelId) => setAttributes({ channelId: newChannelId })}
-                                help="Leave blank to use the default Channel ID from settings."
+                                help="Select a channel, or leave as default to use the channel from Settings."
                             />
                             <ToggleControl
                                 label="Enable User Search"
